@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flavor_fog/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flavor_fog/screens/chat_screen.dart';
 import 'package:intl/intl.dart';
@@ -53,6 +54,7 @@ class _ForumCardState extends State<ForumCard> {
                                 documentId: snapshot.data.docs[index].id,
                               ))),
                   child: Card(
+                    color: login_bg,
                     elevation: 8,
                     child: ListTile(
                       title: Text(chatDocuments[index]['title']),

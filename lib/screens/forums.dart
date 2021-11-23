@@ -23,6 +23,22 @@ class _ForumsScreenState extends State<ForumsScreen> {
   var _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final TextEditingController titleController = TextEditingController();
+  _submit() async {
+    final user = await FirebaseAuth.instance.currentUser;
+    final userData = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .get();
+    FirebaseFirestore.instance.collection('forums').add({
+      'title': titleController.text,
+      'sentAt': Timestamp.now(),
+      'userId': user.uid,
+      'firstName': userData['name'],
+      'userImage': userData['image'],
+    });
+    Navigator.pop(context);
+    titleController.clear();
+  }
 
   var _newTitle = '';
   @override
@@ -61,30 +77,17 @@ class _ForumsScreenState extends State<ForumsScreen> {
                   child: Text('Start a discussion'),
                 ),
                 TextField(
+                  controller: titleController,
                   onChanged: (text) {
                     setState(() {
                       _newTitle = text;
                     });
                   },
                 ),
-                TextField(),
-                RaisedButton(
+                ElevatedButton(
                   onPressed: () async {
                     FocusScope.of(context).unfocus();
-                    titleController.clear();
-                    final user = await FirebaseAuth.instance.currentUser;
-                    final userData = await FirebaseFirestore.instance
-                        .collection('users')
-                        .doc(user.uid)
-                        .get();
-                    FirebaseFirestore.instance.collection('forums').add({
-                      'title': titleController.text,
-                      'sentAt': Timestamp.now(),
-                      'userId': user.uid,
-                      'firstName': userData['name'],
-                      'userImage': userData['image'],
-                    });
-                    Navigator.pop(context);
+                    titleController.text.trim().isEmpty ? null : _submit();
                   },
                   child: Text('Submit'),
                 )

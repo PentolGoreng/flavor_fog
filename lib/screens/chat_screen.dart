@@ -45,11 +45,11 @@ class _ChatScreenState extends State<ChatScreen> {
         appBar: AppBar(
           title: Text('Chats'),
           actions: [
-            IconButton(
-                icon: Icon(Icons.exit_to_app),
-                onPressed: () {
-                  FirebaseAuth.instance.signOut();
-                })
+            // IconButton(
+            //     icon: Icon(Icons.exit_to_app),
+            //     onPressed: () {
+            //       FirebaseAuth.instance.signOut();
+            //     })
           ],
         ),
         body: Container(

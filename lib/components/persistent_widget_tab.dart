@@ -3,6 +3,7 @@ import 'package:flavor_fog/components/news.dart';
 import 'package:flavor_fog/components/rss_reader.dart';
 import 'package:flavor_fog/constants.dart';
 import 'package:flavor_fog/routes.dart';
+import 'package:flavor_fog/screens/auth_screen.dart';
 import 'package:flavor_fog/screens/chats/chats_screen.dart';
 import 'package:flavor_fog/screens/details/details_screen.dart';
 import 'package:flavor_fog/screens/details/details_screen.dart';
@@ -151,9 +152,10 @@ class _ProvidedStylesExampleState extends State<ProvidedStylesExample> {
         activeColorPrimary: kPrimaryColor,
         inactiveColorPrimary: Colors.grey,
         routeAndNavigatorSettings: RouteAndNavigatorSettings(
-          initialRoute: '/profile',
+          initialRoute: '/home',
           routes: {
-            '/first': (context) => ProfileScreen(),
+            // '/profile': (context) => ProfileScreen(),
+            // '/auth': (context) => AuthScreen(),
             //   '/second': (context) => MainScreen3(),
           },
         ),

@@ -4,7 +4,10 @@ import 'dart:typed_data';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flavor_fog/constants.dart';
+import 'package:flavor_fog/models/ChatMessage.dart';
 import 'package:flavor_fog/screens/account/account_screen.dart';
+import 'package:flavor_fog/screens/myshop/myshop_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flavor_fog/screens/auth_screen.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
@@ -45,16 +48,47 @@ class _BodyState extends State<Body> {
               errorMsg = e.error;
             }));
   }
+  var _newShop = '';
+  var _newShop1 = '';
+  _submit() async {
+    final user = await FirebaseAuth.instance.currentUser;
 
+    final shopData = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .get();
+
+    DocumentReference docRef =
+        await FirebaseFirestore.instance.collection('shops').add({
+      'title': shopController.text,
+      'address': addrController.text,
+      'creationTime': Timestamp.now(),
+      'shopId': '',
+      'userId': user.uid,
+      // 'shopImage': shopData['image'],
+    });
+    FirebaseFirestore.instance.collection('shops').doc(docRef.id).update({
+      'shopId': docRef.id,
+    });
+    shopController.clear();
+    addrController.clear();
+
+    FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+      'shopId': docRef.id,
+    });
+  }
+
+  TextEditingController shopController = TextEditingController();
+  TextEditingController addrController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(vertical: 20),
-      child: Column(
-        children: [
+        padding: EdgeInsets.symmetric(vertical: 20),
+        child: Column(children: [
           ProfilePic(),
           SizedBox(height: 20),
           ProfileMenu(
+            color: Color(0xFF212121),
             text: "My Account",
             icon: "assets/icons/User Icon.svg",
             press: () => {
@@ -64,27 +98,134 @@ class _BodyState extends State<Body> {
             },
           ),
           ProfileMenu(
+            color: Color(0xFF212121),
             text: "Notifications",
             icon: "assets/icons/Bell.svg",
             press: () {},
           ),
           ProfileMenu(
+            color: Color(0xFF212121),
             text: "Settings",
             icon: "assets/icons/Settings.svg",
             press: () {},
           ),
           ProfileMenu(
+            color: Color(0xFF212121),
             text: "Help Center",
             icon: "assets/icons/Question mark.svg",
             press: () {},
           ),
           ProfileMenu(
+            color: Color(0xFF212121),
             text: "Log Out",
             icon: "assets/icons/Log out.svg",
-            press: () {},
+            press: () {
+              FirebaseAuth.instance.signOut();
+              Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                MaterialPageRoute(
+                  builder: (BuildContext context) {
+                    return AuthScreen();
+                  },
+                ),
+                (_) => false,
+              );
+            },
           ),
-        ],
-      ),
-    );
+          // Spacer(
+          //   flex: 1,
+          // ),
+
+          Align(
+              alignment: Alignment.bottomCenter,
+              child: (ProfileMenu(
+                  color: kPrimaryColor,
+                  text: "My Shop",
+                  icon: "assets/icons/Log out.svg",
+                  press: () async {
+                    String uid = FirebaseAuth.instance.currentUser.uid;
+                    final shopDoc = await FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(uid)
+                        .get();
+                    String shopId = shopDoc["shopId"];
+
+                    FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(uid)
+                        .get()
+                        .then((DocumentSnapshot documentSnapshot) {
+                      if (documentSnapshot.exists) {
+                        print('Document data: ${documentSnapshot.data()}');
+                        pushNewScreen(context,
+                            screen: MyShopScreen(
+                              shopId: shopId,
+                            ));
+                        try {
+                          dynamic nested =
+                              documentSnapshot.get(FieldPath(['shopId']));
+                        } on StateError catch (e) {
+                          _showDialog(context);
+                        }
+                      } else {
+                        print('No nested field exists!');
+                      }
+                    });
+                  })))
+        ]));
+  }
+
+  void _showDialog(context) {
+    showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+        ),
+        context: context,
+        builder: (_) => Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Center(
+                  child: Text(
+                    'Create your on Shop',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
+
+                TextField(
+                  decoration: InputDecoration(hintText: "Shop Name"),
+                  controller: shopController,
+                  onChanged: (text) {
+                    setState(() {
+                      _newShop = text;
+                    });
+                  },
+                ),
+                TextField(
+                  decoration: InputDecoration(hintText: "Shop Address"),
+                  maxLines: 5,
+                  controller: addrController,
+                  onChanged: (text) {
+                    setState(() {
+                      _newShop1 = text;
+                    });
+                  },
+                ),
+                // TextField(),
+                ElevatedButton(
+                  onPressed: () async {
+                    FocusScope.of(context).unfocus();
+                    if (shopController.text.trim().isEmpty ||
+                        addrController.text.trim().isEmpty) {
+                      return null;
+                    } else {
+                      _submit();
+                    }
+                    Navigator.pop(context);
+                  },
+                  child: Text('Submit'),
+                )
+              ],
+            )));
   }
 }
