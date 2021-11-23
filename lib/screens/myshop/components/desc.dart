@@ -39,36 +39,32 @@ class _DescScreenState extends State<DescScreen> {
           padding: EdgeInsets.symmetric(horizontal: 30),
           child: Align(
             alignment: Alignment.topLeft,
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(widget.shopId),
-                    Text(
-                      name,
-                      style: TextStyle(color: kPrimaryColor),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Email'),
-                    Text(
-                      name,
-                      style: TextStyle(color: kPrimaryColor),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                Center(
-                    child: Text('Click to make changes',
-                        style: TextStyle(color: Colors.grey, fontSize: 13)))
-              ],
+            child: Center(
+              child: Column(
+                children: [
+                  Text(
+                    name,
+                    style: TextStyle(color: kPrimaryColor),
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Email'),
+                      Text(
+                        name,
+                        style: TextStyle(color: kPrimaryColor),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Center(
+                      child: Text('Click to make changes',
+                          style: TextStyle(color: Colors.grey, fontSize: 13)))
+                ],
+              ),
             ),
           ),
         );

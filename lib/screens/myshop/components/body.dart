@@ -1,4 +1,5 @@
 import 'package:flavor_fog/screens/myshop/components/desc.dart';
+import 'package:flavor_fog/screens/myshop/components/myshop_list.dart';
 import 'package:flavor_fog/size_config.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +19,7 @@ class Body extends StatelessWidget {
           DescScreen(
             shopId: shopId,
           ),
+          MyShopList(shopId: shopId),
         ]));
   }
 }
