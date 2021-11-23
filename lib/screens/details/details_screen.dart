@@ -9,8 +9,25 @@ class DetailsScreen extends StatelessWidget {
   final Product product;
   static String routeName = "/details";
 
-  const DetailsScreen({this.product});
-
+  const DetailsScreen({
+    this.product,
+    this.id,
+    this.title,
+    this.description,
+    this.images,
+    this.colors,
+    this.rating,
+    this.price,
+    this.isFavourite,
+    this.isPopular,
+  });
+  final String id;
+  final String title, description;
+  final List<String> images;
+  final List<Color> colors;
+  final double rating;
+  final String price;
+  final bool isFavourite, isPopular;
   @override
   Widget build(BuildContext context) {
     final agrs = ModalRoute.of(context).settings.arguments;
@@ -22,7 +39,12 @@ class DetailsScreen extends StatelessWidget {
       //   preferredSize: Size.fromHeight(AppBar().preferredSize.height),
       //   child: CustomAppBar(rating: product.rating),
       // ),
-      body: Body(product: product),
+      body: Body(
+        title: title,
+        price: price,
+        description: description,
+        images: images,
+      ),
     );
   }
 }

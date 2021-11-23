@@ -1,3 +1,5 @@
+//@dart=2.9
+
 import 'package:expandable_text/expandable_text.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
@@ -10,13 +12,28 @@ import '../../../size_config.dart';
 
 class ProductDescription extends StatelessWidget {
   const ProductDescription({
-    Key? key,
-    required this.product,
+    Key key,
+    this.product,
     this.pressOnSeeMore,
+    this.id,
+    this.title,
+    this.description,
+    this.images,
+    this.colors,
+    this.rating,
+    this.price,
+    this.isFavourite,
+    this.isPopular,
   }) : super(key: key);
-
+  final String id;
+  final String title, description;
+  final List<String> images;
+  final List<Color> colors;
+  final double rating;
+  final String price;
+  final bool isFavourite, isPopular;
   final Product product;
-  final GestureTapCallback? pressOnSeeMore;
+  final GestureTapCallback pressOnSeeMore;
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +47,11 @@ class ProductDescription extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                product.title,
+                title,
                 style: Theme.of(context).textTheme.headline6,
               ),
               Text(
-                product.price.toString(),
+                price,
                 style: Theme.of(context).textTheme.subtitle1,
               ),
             ],
@@ -78,7 +95,7 @@ class ProductDescription extends StatelessWidget {
           padding:
               EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(35)),
           child: ExpandableText(
-            '${product.description}' + '\n',
+            '${description}' + '\n',
             expandText: 'show more',
             collapseText: 'show less',
             // expanded: false,

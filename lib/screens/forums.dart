@@ -43,6 +43,9 @@ class _ForumsScreenState extends State<ForumsScreen> {
           ],
         ),
       ),
+      bottomSheet: SizedBox(
+        height: kBottomNavigationBarHeight * 2,
+      ),
     );
   }
 

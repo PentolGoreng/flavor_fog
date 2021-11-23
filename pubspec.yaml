@@ -58,6 +58,8 @@ dependencies:
   firebase_messaging: ^11.1.0
   flutter_local_notifications: ^9.1.2
   
+  carousel_slider: ^4.0.0
+  
   # google_fonts: ^2.1.0
   
 

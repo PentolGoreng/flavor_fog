@@ -63,7 +63,7 @@ class _NewMessageState extends State<NewMessage> {
           )),
           IconButton(
               icon: Icon(Icons.send),
-              onPressed: _newMessage.trim().isEmpty ? null : _send)
+              onPressed: _controller.text.trim().isEmpty ? null : _send)
         ],
       ),
     );
