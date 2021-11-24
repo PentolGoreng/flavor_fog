@@ -62,6 +62,7 @@ class ProductCard1 extends StatelessWidget {
                     images: images,
                     description: description,
                     price: price,
+                    id: id,
                   ),
                 ),
                 child: Column(

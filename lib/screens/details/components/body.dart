@@ -2,7 +2,9 @@ import 'package:flavor_fog/components/default_button.dart';
 import 'package:flavor_fog/models/models.dart';
 import 'package:flavor_fog/models/product.dart';
 import 'package:flavor_fog/size_config.dart';
+import 'package:flavor_fog/temprating.dart';
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 // import 'package:shop_app/components/default_button.dart';
 // import 'package:shop_app/models/Product.dart';
 // import 'package:shop_app/size_config.dart';
@@ -69,7 +71,12 @@ class Body extends StatelessWidget {
                         ),
                         child: DefaultButton(
                           text: "Add To Cart",
-                          press: () {},
+                          press: () => {
+                            pushNewScreen(context,
+                                screen: tempRating(id: id),
+                                pageTransitionAnimation:
+                                    PageTransitionAnimation.slideUp)
+                          },
                         ),
                       ),
                     ),

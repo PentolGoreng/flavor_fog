@@ -8,6 +8,7 @@ import 'package:flavor_fog/constants.dart';
 import 'package:flavor_fog/models/ChatMessage.dart';
 import 'package:flavor_fog/screens/account/account_screen.dart';
 import 'package:flavor_fog/screens/myshop/myshop_screen.dart';
+import 'package:flavor_fog/temprating.dart';
 import 'package:flutter/material.dart';
 import 'package:flavor_fog/screens/auth_screen.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
@@ -101,7 +102,7 @@ class _BodyState extends State<Body> {
             color: Color(0xFF212121),
             text: "Notifications",
             icon: "assets/icons/Bell.svg",
-            press: () {},
+            press: () => {},
           ),
           ProfileMenu(
             color: Color(0xFF212121),
@@ -164,10 +165,10 @@ class _BodyState extends State<Body> {
                           dynamic nested =
                               documentSnapshot.get(FieldPath(['shopId']));
                         } on StateError catch (e) {
-                          _showDialog(context);
+                          print(e);
                         }
                       } else {
-                        print('No nested field exists!');
+                        _showDialog(context);
                       }
                     });
                   })))

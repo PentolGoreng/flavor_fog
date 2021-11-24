@@ -44,6 +44,7 @@ class DetailsScreen extends StatelessWidget {
         price: price,
         description: description,
         images: images,
+        id: id,
       ),
     );
   }
