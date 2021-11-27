@@ -5,7 +5,7 @@ import 'package:flavor_fog/models/product.dart';
 import '../../../constants.dart';
 import '../../../size_config.dart';
 
-class ColorDots extends StatelessWidget {
+class ColorDots extends StatefulWidget {
   const ColorDots({
     Key? key,
     required this.product,
@@ -13,6 +13,11 @@ class ColorDots extends StatelessWidget {
 
   final Product product;
 
+  @override
+  State<ColorDots> createState() => _ColorDotsState();
+}
+
+class _ColorDotsState extends State<ColorDots> {
   @override
   Widget build(BuildContext context) {
     // Now this is fixed and only for demo
@@ -22,13 +27,13 @@ class ColorDots extends StatelessWidget {
           EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
       child: Row(
         children: [
-          ...List.generate(
-            product.colors.length,
-            (index) => ColorDot(
-              color: product.colors[index],
-              isSelected: index == selectedColor,
-            ),
-          ),
+          // ...List.generate(
+          //   product.colors.length,
+          //   (index) => ColorDot(
+          //     color: product.colors[index],
+          //     isSelected: index == selectedColor,
+          //   ),
+          // ),
           Spacer(),
           RoundedIconBtn(
             icon: Icons.remove,

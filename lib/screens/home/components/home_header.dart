@@ -21,7 +21,15 @@ class HomeHeader extends StatelessWidget {
           SearchField(),
           IconBtnWithCounter(
             svgSrc: "assets/icons/Cart Icon.svg",
-            press: () => Navigator.pushNamed(context, CartScreen.routeName),
+            press: () {
+              Navigator.of(context, rootNavigator: true).push(
+                MaterialPageRoute(
+                  builder: (BuildContext context) {
+                    return CartScreen();
+                  },
+                ),
+              );
+            },
           ),
           IconBtnWithCounter(
             svgSrc: "assets/icons/Bell.svg",

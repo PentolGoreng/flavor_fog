@@ -98,7 +98,7 @@ class _ProvidedStylesExampleState extends State<ProvidedStylesExample> {
         inactiveColorPrimary: Colors.grey,
         inactiveColorSecondary: Colors.purple,
         routeAndNavigatorSettings: RouteAndNavigatorSettings(
-          initialRoute: HomeScreen.routeName,
+          initialRoute: "/home",
           routes: routes,
         ),
       ),

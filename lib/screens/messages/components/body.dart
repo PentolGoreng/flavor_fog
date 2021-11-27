@@ -59,8 +59,8 @@ class _BodyState extends State<Body> {
                       decoration: BoxDecoration(
                         color: Color(0xFF212121),
                       ),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: kDefaultPadding),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: kDefaultPadding),
                       child:
                           // ListView.builder(
                           //   itemCount: demeChatMessages.length,

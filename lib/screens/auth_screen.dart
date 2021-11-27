@@ -55,6 +55,7 @@ class _AuthScreenState extends State<AuthScreen>
   // BuildContext context;
   // AppMethods appMethods = Auth as AppMethods;
   _AuthScreenState();
+
   void inputData1() {
     setState(() {
       final Cuser = FirebaseAuth.instance.currentUser;
@@ -551,6 +552,7 @@ class _AuthScreenState extends State<AuthScreen>
               ]);
             }));
   }
+}
 
 //   verifyDetails() async {
 //     if (fullname.text == "") {
@@ -617,4 +619,4 @@ class _AuthScreenState extends State<AuthScreen>
 //   }
 
 //   showDialogue() {}
-}
+

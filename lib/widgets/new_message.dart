@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flavor_fog/constants.dart';
 import 'package:flutter/material.dart';
 
 class NewMessage extends StatefulWidget {
@@ -63,6 +64,9 @@ class _NewMessageState extends State<NewMessage> {
           )),
           IconButton(
               icon: Icon(Icons.send),
+              color: _controller.text.trim().isEmpty
+                  ? Colors.black
+                  : kPrimaryColor,
               onPressed: _controller.text.trim().isEmpty ? null : _send)
         ],
       ),

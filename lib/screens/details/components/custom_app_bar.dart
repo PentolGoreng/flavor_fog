@@ -52,6 +52,7 @@ class CustomAppBar extends StatelessWidget {
                   Text(
                     "$rating",
                     style: const TextStyle(
+                      color: Colors.black,
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),

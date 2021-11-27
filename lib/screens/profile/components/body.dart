@@ -65,6 +65,7 @@ class _BodyState extends State<Body> {
       'address': addrController.text,
       'creationTime': Timestamp.now(),
       'shopId': '',
+      'shop': '',
       'userId': user.uid,
       // 'shopImage': shopData['image'],
     });
@@ -76,6 +77,7 @@ class _BodyState extends State<Body> {
 
     FirebaseFirestore.instance.collection('users').doc(user.uid).update({
       'shopId': docRef.id,
+      'shop': 'hasShop',
     });
   }
 
@@ -98,12 +100,12 @@ class _BodyState extends State<Body> {
                   pageTransitionAnimation: PageTransitionAnimation.slideUp)
             },
           ),
-          ProfileMenu(
-            color: Color(0xFF212121),
-            text: "Notifications",
-            icon: "assets/icons/Bell.svg",
-            press: () => {},
-          ),
+          // ProfileMenu(
+          //   color: Color(0xFF212121),
+          //   text: "Notifications",
+          //   icon: "assets/icons/Bell.svg",
+          //   press: () => {},
+          // ),
           ProfileMenu(
             color: Color(0xFF212121),
             text: "Settings",
@@ -132,6 +134,7 @@ class _BodyState extends State<Body> {
               );
             },
           ),
+
           // Spacer(
           //   flex: 1,
           // ),
@@ -148,30 +151,43 @@ class _BodyState extends State<Body> {
                         .collection('users')
                         .doc(uid)
                         .get();
-                    String shopId = shopDoc["shopId"];
 
                     FirebaseFirestore.instance
                         .collection('users')
                         .doc(uid)
                         .get()
                         .then((DocumentSnapshot documentSnapshot) {
-                      if (documentSnapshot.exists) {
-                        print('Document data: ${documentSnapshot.data()}');
-                        pushNewScreen(context,
-                            screen: MyShopScreen(
-                              shopId: shopId,
-                            ));
-                        try {
-                          dynamic nested =
-                              documentSnapshot.get(FieldPath(['shopId']));
-                        } on StateError catch (e) {
-                          print(e);
-                        }
-                      } else {
-                        _showDialog(context);
+                      if (shopDoc.data().containsValue("hasShop")) {
+                        setState(() {
+                          // print('Document data: ${documentSnapshot.data()}' +
+                          //     'a');
+                          String shopId = shopDoc["shopId"];
+                          pushNewScreen(context,
+                              screen: MyShopScreen(
+                                shopId: shopId,
+                              ));
+                        });
+                      } else if (!shopDoc.data().containsValue("hasShop")) {
+                        setState(() {
+                          _showDialog(context);
+                        });
                       }
+                      // if (documentSnapshot.exists) {
+                      //   print('Document data: ${documentSnapshot.data()}');
+                      //   String shopId = shopDoc["shopId"];
+
+                      //   try {
+                      //     dynamic nested =
+                      //         documentSnapshot.get(FieldPath(['shopId']));
+                      //   } on StateError catch (e) {
+                      //     print(e);
+                      //   }
+                      // } else {}
                     });
-                  })))
+                  }))),
+          SizedBox(
+            height: kBottomNavigationBarHeight,
+          ),
         ]));
   }
 
@@ -181,20 +197,22 @@ class _BodyState extends State<Body> {
           borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
         ),
         context: context,
-        builder: (_) => Padding(
+        builder: (_) => Container(
+            color: login_bg,
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Center(
                   child: Text(
-                    'Create your on Shop',
+                    'Create your own Shop',
                     style: TextStyle(fontSize: 20),
                   ),
                 ),
-
+                Spacer(),
                 TextField(
                   decoration: InputDecoration(hintText: "Shop Name"),
+                  maxLength: 20,
                   controller: shopController,
                   onChanged: (text) {
                     setState(() {
@@ -205,6 +223,7 @@ class _BodyState extends State<Body> {
                 TextField(
                   decoration: InputDecoration(hintText: "Shop Address"),
                   maxLines: 5,
+                  maxLength: 50,
                   controller: addrController,
                   onChanged: (text) {
                     setState(() {
@@ -225,6 +244,9 @@ class _BodyState extends State<Body> {
                     Navigator.pop(context);
                   },
                   child: Text('Submit'),
+                ),
+                SizedBox(
+                  height: kBottomNavigationBarHeight,
                 )
               ],
             )));

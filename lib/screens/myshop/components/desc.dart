@@ -26,7 +26,7 @@ class _DescScreenState extends State<DescScreen> {
           .doc(widget.shopId)
           .snapshots(),
       builder: (context, snapshot) {
-        print(widget.shopId);
+        // print(widget.shopId);
         if (!snapshot.hasData) {
           return new Text("Loading");
         }
