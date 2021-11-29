@@ -81,6 +81,9 @@ class _ProductImagesState extends State<ProductImages> {
 
               // ),
               // SizedBox(height: getProportionateScreenWidth(20)),
+              SizedBox(
+                height: getProportionateScreenHeight(20),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

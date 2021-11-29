@@ -14,7 +14,7 @@ class Body extends StatelessWidget {
         padding:
             EdgeInsets.symmetric(vertical: getProportionateScreenHeight(50)),
         child: Column(children: [
-          Center(child: MyShopPic()),
+          Center(child: MyShopPic(shopId: shopId)),
           SizedBox(height: 50),
           DescScreen(
             shopId: shopId,

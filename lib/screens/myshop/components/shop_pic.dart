@@ -6,9 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class MyShopPic extends StatefulWidget {
-  MyShopPic({
-    Key key,
-  }) : super(key: key);
+  String shopId;
+  MyShopPic({Key key, this.shopId}) : super(key: key);
 
   @override
   State<MyShopPic> createState() => _MyShopPicState();
@@ -20,10 +19,11 @@ class _MyShopPicState extends State<MyShopPic> {
   User user = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
+    print(widget.shopId);
     return StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection('users')
-          .doc('${user.uid}')
+          .doc('${widget.shopId}')
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {

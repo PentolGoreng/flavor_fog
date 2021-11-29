@@ -8,10 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class DescScreen extends StatefulWidget {
-  DescScreen({
-    Key key,
-  }) : super(key: key);
-
+  DescScreen({Key key, this.shopId}) : super(key: key);
+  final String shopId;
   @override
   State<DescScreen> createState() => _DescScreenState();
 }
@@ -24,51 +22,33 @@ class _DescScreenState extends State<DescScreen> {
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: FirebaseFirestore.instance
-          .collection('users')
-          .doc('${user.uid}')
+          .collection('shops')
+          .doc(widget.shopId)
           .snapshots(),
       builder: (context, snapshot) {
+        // print(widget.shopId);
         if (!snapshot.hasData) {
           return new Text("Loading");
         }
         var userImage = snapshot.data;
-        String image = userImage["image"];
-        String name = userImage["name"];
-        String email = userImage["email"];
+        String address = userImage["address"];
+        String name = userImage["title"];
+        print(widget.shopId);
+
         return Padding(
           padding: EdgeInsets.symmetric(horizontal: 30),
           child: Align(
             alignment: Alignment.topLeft,
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Name'),
-                    Text(
-                      name,
-                      style: TextStyle(color: kPrimaryColor),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Email'),
-                    Text(
-                      email,
-                      style: TextStyle(color: kPrimaryColor),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                Center(
-                    child: Text('Click to make changes',
-                        style: TextStyle(color: Colors.grey, fontSize: 13)))
-              ],
+            child: Center(
+              child: Column(
+                children: [
+                  Text(
+                    name,
+                    style: TextStyle(color: kPrimaryColor),
+                  ),
+                  SizedBox(height: 20),
+                ],
+              ),
             ),
           ),
         );

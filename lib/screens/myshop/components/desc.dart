@@ -47,22 +47,6 @@ class _DescScreenState extends State<DescScreen> {
                     style: TextStyle(color: kPrimaryColor),
                   ),
                   SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Email'),
-                      Text(
-                        name,
-                        style: TextStyle(color: kPrimaryColor),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Center(
-                      child: Text('Click to make changes',
-                          style: TextStyle(color: Colors.grey, fontSize: 13)))
                 ],
               ),
             ),

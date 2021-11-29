@@ -67,6 +67,8 @@ class _BodyState extends State<Body> {
       'shopId': '',
       'shop': '',
       'userId': user.uid,
+      'image':
+          'https://firebasestorage.googleapis.com/v0/b/flavour-fog.appspot.com/o/Profile%2Fprofile.jpg?alt=media&token=ddf7ce8f-70b7-40c9-beaf-e4fb8688c6d8'
       // 'shopImage': shopData['image'],
     });
     FirebaseFirestore.instance.collection('shops').doc(docRef.id).update({

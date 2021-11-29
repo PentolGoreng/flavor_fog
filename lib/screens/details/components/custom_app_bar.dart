@@ -44,7 +44,7 @@ class CustomAppBar extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Colors.black,
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Row(
@@ -52,13 +52,16 @@ class CustomAppBar extends StatelessWidget {
                   Text(
                     "$rating",
                     style: const TextStyle(
-                      color: Colors.black,
+                      color: kPrimaryColor,
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   const SizedBox(width: 5),
-                  SvgPicture.asset("assets/icons/Star Icon.svg"),
+                  SvgPicture.asset(
+                    "assets/icons/Star Icon.svg",
+                    color: Colors.white,
+                  ),
                 ],
               ),
             )

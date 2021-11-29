@@ -6,10 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ShopPic extends StatefulWidget {
-  ShopPic({
-    Key key,
-  }) : super(key: key);
-
+  ShopPic({Key key, this.images}) : super(key: key);
+  final String images;
   @override
   State<ShopPic> createState() => _ShopPicState();
 }
@@ -30,7 +28,7 @@ class _ShopPicState extends State<ShopPic> {
           return new Text("Loading");
         }
         var userImage = snapshot.data;
-        String image = userImage["image"];
+        // String image = userImage["image"];
         return SizedBox(
             height: 115,
             width: 115,
@@ -38,7 +36,7 @@ class _ShopPicState extends State<ShopPic> {
                 Stack(fit: StackFit.expand, clipBehavior: Clip.none, children: [
               CircleAvatar(
                 child: ClipOval(
-                  child: Image.network('$image'),
+                  child: Image.network('${widget.images}'),
                 ),
               ),
               Positioned(

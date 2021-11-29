@@ -1,40 +1,40 @@
-import 'package:flutter/material.dart';
-import 'package:flavor_fog/components/product_card.dart';
-import 'package:flavor_fog/models/product.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flavor_fog/components/shop_card.dart';
+// import 'package:flavor_fog/models/product.dart';
 
-import '../../../size_config.dart';
-import 'section_title.dart';
+// import '../../../size_config.dart';
+// import 'section_title.dart';
 
-class PopularProducts extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding:
-              EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
-          child: SectionTitle(title: "Categories", press: () {}),
-        ),
-        SizedBox(height: getProportionateScreenWidth(20)),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              ...List.generate(
-                demoProducts.length,
-                (index) {
-                  if (demoProducts[index].isPopular)
-                    return ProductCard(product: demoProducts[index]);
+// class PopularProducts extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       children: [
+//         Padding(
+//           padding:
+//               EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
+//           child: SectionTitle(title: "Categories", press: () {}),
+//         ),
+//         SizedBox(height: getProportionateScreenWidth(20)),
+//         SingleChildScrollView(
+//           scrollDirection: Axis.horizontal,
+//           child: Row(
+//             children: [
+//               ...List.generate(
+//                 demoProducts.length,
+//                 (index) {
+//                   if (demoProducts[index].isPopular)
+//                     return ProductCard(product: demoProducts[index]);
 
-                  return SizedBox
-                      .shrink(); // here by default width and height is 0
-                },
-              ),
-              SizedBox(width: getProportionateScreenWidth(20)),
-            ],
-          ),
-        )
-      ],
-    );
-  }
-}
+//                   return SizedBox
+//                       .shrink(); // here by default width and height is 0
+//                 },
+//               ),
+//               SizedBox(width: getProportionateScreenWidth(20)),
+//             ],
+//           ),
+//         )
+//       ],
+//     );
+//   }
+// }

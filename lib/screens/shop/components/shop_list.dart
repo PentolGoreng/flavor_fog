@@ -7,14 +7,14 @@ import 'package:flavor_fog/models/product.dart';
 
 import '../../../size_config.dart';
 
-class MyShopList extends StatefulWidget {
+class ShopList extends StatefulWidget {
   final String shopId;
-  MyShopList({required this.shopId});
+  ShopList({required this.shopId});
   @override
-  State<MyShopList> createState() => _MyShopListState();
+  State<ShopList> createState() => _ShopListState();
 }
 
-class _MyShopListState extends State<MyShopList> {
+class _ShopListState extends State<ShopList> {
   @override
   Widget build(BuildContext context) {
     return Column(
