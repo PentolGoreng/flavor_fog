@@ -1,5 +1,6 @@
 //@dart=2.9
 
+import 'package:flavor_fog/constants.dart';
 import 'package:flutter/material.dart';
 
 class MessageBubble extends StatelessWidget {
@@ -29,7 +30,7 @@ class MessageBubble extends StatelessWidget {
                           !isMe ? Radius.circular(0) : Radius.circular(12),
                       bottomRight:
                           isMe ? Radius.circular(0) : Radius.circular(12)),
-                  color: isMe ? Colors.grey[300] : Colors.pinkAccent),
+                  color: isMe ? kPrimaryColor : Colors.black),
               width: 140,
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               margin: EdgeInsets.symmetric(vertical: 16, horizontal: 8),

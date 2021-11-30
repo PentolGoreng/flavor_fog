@@ -7,7 +7,7 @@ import '../../models/product.dart';
 import 'components/body.dart';
 import 'components/custom_app_bar.dart';
 
-class DetailsScreen extends StatefulWidget {
+class DetailsScreen extends StatelessWidget {
   final Product product;
   static String routeName = "/details";
 
@@ -30,16 +30,11 @@ class DetailsScreen extends StatefulWidget {
   final double rating;
   final String price;
   final bool isFavourite, isPopular;
-
-  @override
-  State<DetailsScreen> createState() => _DetailsScreenState();
-}
-
-class _DetailsScreenState extends State<DetailsScreen> {
   List<double> rateList = [];
 
   double _rating1 = 0;
 
+  @override
   @override
   Future<List<double>> getCordsFromFirebase() async {
     // print('Length of cords list is: ' + coordinatesList.length.toString()); //
@@ -79,7 +74,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('products')
-            .doc(widget.id)
+            .doc(id)
             .collection('rating')
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -99,11 +94,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
               child: CustomAppBar(rating: rating1),
             ),
             body: Body(
-              title: widget.title,
-              price: widget.price,
-              description: widget.description,
-              images: widget.images,
-              id: widget.id,
+              title: title,
+              price: price,
+              description: description,
+              images: images,
+              id: id,
             ),
           );
         });

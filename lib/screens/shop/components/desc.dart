@@ -44,7 +44,7 @@ class _DescScreenState extends State<DescScreen> {
                 children: [
                   Text(
                     name,
-                    style: TextStyle(color: kPrimaryColor),
+                    style: TextStyle(color: Colors.white, fontSize: 20),
                   ),
                   SizedBox(height: 20),
                 ],

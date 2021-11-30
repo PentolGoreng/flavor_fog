@@ -82,7 +82,7 @@ class _AuthScreenState extends State<AuthScreen>
   }
 
   // final User user = FirebaseAuth.instance.currentUser;
-  final uid = '1';
+
   var collection = FirebaseFirestore.instance.collection('users');
   void submit(context) async {
     try {

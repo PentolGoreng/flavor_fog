@@ -1,3 +1,6 @@
+//@dart=2.9
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flavor_fog/models/cart.dart';
 
@@ -6,11 +9,19 @@ import '../../../size_config.dart';
 
 class CartCard extends StatelessWidget {
   const CartCard({
-    Key? key,
-    required this.cart,
+    Key key,
+    // required this.cart,
+    this.id,
+    this.item,
+    this.images,
+    this.title,
+    this.price,
   }) : super(key: key);
+  final List<String> images;
 
-  final Cart cart;
+  final String id, title, price;
+  final int item;
+  // final Cart cart;
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +34,10 @@ class CartCard extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.all(getProportionateScreenWidth(10)),
               decoration: BoxDecoration(
-                color: Color(0xFFF5F6F9),
+                color: login_bg,
                 borderRadius: BorderRadius.circular(15),
               ),
-              child: Image.asset(cart.product.images[0]),
+              child: Image(image: NetworkImage(images[0].toString())),
             ),
           ),
         ),
@@ -35,20 +46,22 @@ class CartCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              cart.product.title,
-              style: TextStyle(color: Colors.black, fontSize: 16),
+              title,
+              style: TextStyle(color: Colors.white, fontSize: 18),
               maxLines: 2,
             ),
             SizedBox(height: 10),
             Text.rich(
               TextSpan(
-                text: "\$${cart.product.price}",
-                style: TextStyle(
-                    fontWeight: FontWeight.w600, color: kPrimaryColor),
+                text: "IDR ${price}",
+                style:
+                    TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
                 children: [
                   TextSpan(
-                      text: " x${cart.numOfItem}",
-                      style: Theme.of(context).textTheme.bodyText1),
+                    text: "      x${item}",
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600, color: kPrimaryColor),
+                  ),
                 ],
               ),
             )

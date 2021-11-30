@@ -2,6 +2,7 @@ import 'package:flavor_fog/size_config.dart';
 import 'package:flutter/material.dart';
 
 const kPrimaryColor = Color(0xFF618BF6);
+
 const kPrimaryLightColor = Color(0xFFFFECDF);
 const kPrimaryGradientColor = LinearGradient(
   begin: Alignment.topLeft,

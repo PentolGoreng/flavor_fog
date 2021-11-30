@@ -4,7 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ListShop extends StatelessWidget {
-  const ListShop({Key? key}) : super(key: key);
+  final BuildContext menuScreenContext;
+
+  const ListShop({
+    Key? key,
+    required this.menuScreenContext,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -38,62 +38,58 @@ class _ProductImagesState extends State<ProductImages> {
   int selectedImage = 0;
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('forums').snapshots(),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
-          final productImg = snapshot.data.docs;
-          return Column(
-            children: [
-              SizedBox(
-                width: getProportionateScreenWidth(238),
-                child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    child: Image(
-                      image: NetworkImage(widget.images[selectedImage]),
-                    )
-                    // child: Hero(
-                    //   tag: widget.product.id.toString(),
-                    //   child: ,
-                    ),
-              ),
+    return Column(
+      children: [
+        Column(
+          children: [
+            SizedBox(
+              width: getProportionateScreenWidth(238),
+              child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  child: Image(
+                    image: NetworkImage(widget.images[selectedImage]),
+                  )
+                  // child: Hero(
+                  //   tag: widget.product.id.toString(),
+                  //   child: ,
+                  ),
+            ),
+          ],
+        ),
 
-              // SizedBox(
-              //   child: CarouselSlider(
-              //     items: widget.images.map((item) {
-              //       return Builder(
-              //         builder: (BuildContext context) {
-              //           return Container(
-              //               width: 400,
-              //               height: 400,
-              //               margin: EdgeInsets.all(0.5),
-              //               // decoration:
-              //               // BoxDecoration(color: Colors.lightBlue[100 * (i % 5)]),
+        // SizedBox(
+        //   child: CarouselSlider(
+        //     items: widget.images.map((item) {
+        //       return Builder(
+        //         builder: (BuildContext context) {
+        //           return Container(
+        //               width: 400,
+        //               height: 400,
+        //               margin: EdgeInsets.all(0.5),
+        //               // decoration:
+        //               // BoxDecoration(color: Colors.lightBlue[100 * (i % 5)]),
 
-              //               child: Image(image: NetworkImage(item)));
-              //         },
-              //       );
-              //     }).toList(),
-              //   ),
-              // ),
+        //               child: Image(image: NetworkImage(item)));
+        //         },
+        //       );
+        //     }).toList(),
+        //   ),
+        // ),
 
-              // ),
-              // SizedBox(height: getProportionateScreenWidth(20)),
-              SizedBox(
-                height: getProportionateScreenHeight(20),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ...List.generate(widget.images.length,
-                      (index) => buildSmallProductPreview(index)),
-                ],
-              )
-            ],
-          );
-        });
+        // ),
+        // SizedBox(height: getProportionateScreenWidth(20)),
+        SizedBox(
+          height: getProportionateScreenHeight(20),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ...List.generate(widget.images.length,
+                (index) => buildSmallProductPreview(index)),
+          ],
+        )
+      ],
+    );
   }
 
   GestureDetector buildSmallProductPreview(int index) {

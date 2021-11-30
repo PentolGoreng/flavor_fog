@@ -3,8 +3,13 @@ import 'package:flavor_fog/components/product_card1.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class ListShop extends StatelessWidget {
-  const ListShop({Key? key}) : super(key: key);
+class ListProduct extends StatelessWidget {
+  final BuildContext menuScreenContext;
+
+  const ListProduct({
+    Key? key,
+    required this.menuScreenContext,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
