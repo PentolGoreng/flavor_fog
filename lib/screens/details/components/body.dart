@@ -24,6 +24,7 @@ class Body extends StatelessWidget {
   final double rating;
   final String price;
   final bool isFavourite, isPopular;
+  final String shop;
 
   Body(
       {Key? key,
@@ -36,7 +37,8 @@ class Body extends StatelessWidget {
       required this.rating,
       required this.price,
       required this.isFavourite,
-      required this.isPopular})
+      required this.isPopular,
+      required this.shop})
       : super(key: key);
 
   @override
@@ -51,6 +53,7 @@ class Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(shop);
     return ListView(
       children: [
         ProductImages(
@@ -177,8 +180,6 @@ class Body extends StatelessWidget {
                                                       !snapShot.exists) {
                                                     // Document with id == varuId doesn't exist.
 
-                                                    // You can add data to Firebase Firestore here
-
                                                     FirebaseFirestore.instance
                                                         .collection('users')
                                                         .doc(user.uid)
@@ -186,8 +187,14 @@ class Body extends StatelessWidget {
                                                         .doc(id)
                                                         .set({
                                                       'productId': id,
+                                                      'shopId': shop,
                                                       'total': _item1,
+                                                      'title': title,
+                                                      'price': price,
+                                                      'image':
+                                                          images[0].toString()
                                                     });
+                                                    Navigator.pop(context);
                                                   } else {
                                                     int itemCount =
                                                         snapShot['total'];
@@ -200,6 +207,7 @@ class Body extends StatelessWidget {
                                                       'total':
                                                           _item1 + itemCount,
                                                     });
+                                                    Navigator.pop(context);
                                                   }
                                                 }
 

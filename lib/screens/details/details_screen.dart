@@ -22,6 +22,7 @@ class DetailsScreen extends StatelessWidget {
     this.price,
     this.isFavourite,
     this.isPopular,
+    this.shop,
   });
   final String id;
   final String title, description;
@@ -31,6 +32,7 @@ class DetailsScreen extends StatelessWidget {
   final String price;
   final bool isFavourite, isPopular;
   List<double> rateList = [];
+  final String shop;
 
   double _rating1 = 0;
 
@@ -99,6 +101,7 @@ class DetailsScreen extends StatelessWidget {
               description: description,
               images: images,
               id: id,
+              shop: shop,
             ),
           );
         });

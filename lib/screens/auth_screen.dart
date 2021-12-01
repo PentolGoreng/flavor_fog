@@ -65,6 +65,7 @@ class _AuthScreenState extends State<AuthScreen>
         'name': name.text,
         'email': emailController1.text,
         'uid': uid,
+        'address': '+Add address',
         'image':
             'https://firebasestorage.googleapis.com/v0/b/flavour-fog.appspot.com/o/Profile%2Fprofile.jpg?alt=media&token=ddf7ce8f-70b7-40c9-beaf-e4fb8688c6d8',
       }).catchError((error) => print('Add failed: $error'));

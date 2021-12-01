@@ -16,6 +16,11 @@ class DescScreen extends StatefulWidget {
   State<DescScreen> createState() => _DescScreenState();
 }
 
+String _newAdd;
+TextEditingController _addressC = TextEditingController();
+String _newName;
+TextEditingController _nameC = TextEditingController();
+
 class _DescScreenState extends State<DescScreen> {
   final auth = FirebaseAuth.instance;
   final db = FirebaseFirestore.instance;
@@ -35,6 +40,9 @@ class _DescScreenState extends State<DescScreen> {
         String image = userImage["image"];
         String name = userImage["name"];
         String email = userImage["email"];
+
+        String address = userImage['address'];
+
         return Padding(
           padding: EdgeInsets.symmetric(horizontal: 30),
           child: Align(
@@ -45,10 +53,72 @@ class _DescScreenState extends State<DescScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text('Name'),
-                    Text(
-                      name,
-                      style: TextStyle(color: kPrimaryColor),
-                    ),
+                    GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(25.0)),
+                            ),
+                            context: context,
+                            builder: (_) => Container(
+                                color: login_bg,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 20),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Center(
+                                      child: Text(
+                                        'Name',
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    TextField(
+                                      decoration: InputDecoration(
+                                          hintText: "Address details"),
+                                      maxLength: 20,
+                                      controller: _nameC,
+                                      onChanged: (text) {
+                                        setState(() {
+                                          _newName = text;
+                                        });
+                                      },
+                                    ),
+
+                                    // TextField(),
+                                    ElevatedButton(
+                                      onPressed: () async {
+                                        FocusScope.of(context).unfocus();
+                                        if (_nameC.text.trim().isEmpty ||
+                                            _nameC.text.trim().isEmpty) {
+                                          return null;
+                                        } else {
+                                          FirebaseFirestore.instance
+                                              .collection('users')
+                                              .doc(user.uid)
+                                              .update({'name': _newName});
+                                        }
+                                        _nameC.clear();
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text('Submit'),
+                                    ),
+                                    SizedBox(
+                                      height: kBottomNavigationBarHeight,
+                                    )
+                                  ],
+                                ))).whenComplete(() {
+                          _nameC.clear();
+                        });
+                      },
+                      child: Text(
+                        name,
+                        style: TextStyle(color: kPrimaryColor),
+                      ),
+                    )
                   ],
                 ),
                 SizedBox(height: 20),
@@ -58,7 +128,81 @@ class _DescScreenState extends State<DescScreen> {
                     Text('Email'),
                     Text(
                       email,
-                      style: TextStyle(color: kPrimaryColor),
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Address'),
+                    GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(25.0)),
+                            ),
+                            context: context,
+                            builder: (_) => Container(
+                                color: login_bg,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 20),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Center(
+                                      child: Text(
+                                        'Address',
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    TextField(
+                                      decoration: InputDecoration(
+                                          hintText: "Address details"),
+                                      maxLength: 150,
+                                      maxLines: 4,
+                                      controller: _addressC,
+                                      onChanged: (text) {
+                                        setState(() {
+                                          _newAdd = text;
+                                        });
+                                      },
+                                    ),
+
+                                    // TextField(),
+                                    ElevatedButton(
+                                      onPressed: () async {
+                                        FocusScope.of(context).unfocus();
+                                        if (_addressC.text.trim().isEmpty ||
+                                            _addressC.text.trim().isEmpty) {
+                                          return null;
+                                        } else {
+                                          FirebaseFirestore.instance
+                                              .collection('users')
+                                              .doc(user.uid)
+                                              .update({'address': _newAdd});
+                                        }
+                                        _addressC.clear();
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text('Submit'),
+                                    ),
+                                    SizedBox(
+                                      height: kBottomNavigationBarHeight,
+                                    )
+                                  ],
+                                ))).whenComplete(() {
+                          _addressC.clear();
+                        });
+                      },
+                      child: Text(
+                        address == "" ? "+ Add address" : address,
+                        style: TextStyle(color: kPrimaryColor),
+                      ),
                     ),
                   ],
                 ),

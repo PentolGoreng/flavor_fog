@@ -17,7 +17,7 @@ class CartCard extends StatelessWidget {
     this.title,
     this.price,
   }) : super(key: key);
-  final List<String> images;
+  final String images;
 
   final String id, title, price;
   final int item;
@@ -37,7 +37,7 @@ class CartCard extends StatelessWidget {
                 color: login_bg,
                 borderRadius: BorderRadius.circular(15),
               ),
-              child: Image(image: NetworkImage(images[0].toString())),
+              child: Image(image: NetworkImage(images.toString())),
             ),
           ),
         ),

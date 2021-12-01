@@ -43,12 +43,20 @@ class ListProduct extends StatelessWidget {
                 //     id: productDB[index]['id'],
                 //     images: List.from(productDB[index]['images']),
                 //     description: productDB[index]['desc']);
-                return ProductCard1(
-                    title: productDB[index]['title'],
-                    price: productDB[index]['price'],
-                    id: productDB[index]['id'],
-                    images: List.from(productDB[index]['images']),
-                    description: productDB[index]['desc']);
+
+                // return ProductCard1(
+                //   title: productDB[index]['title'],
+                //   price: productDB[index]['price'],
+                //   id: productDB[index]['id'],
+                //   images: List.from(productDB[index]['images']),
+                //   shop: productDB[index]['shopId'],
+                //   description: productDB[index]['desc'],
+                // );
+                return TextButton(
+                    onPressed: () {
+                      print(productDB[1]['shopId']);
+                    },
+                    child: Text('a'));
 
                 return SizedBox
                     .shrink(); // here by default width and height is 0

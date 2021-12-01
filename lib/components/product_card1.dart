@@ -25,7 +25,8 @@ class ProductCard1 extends StatelessWidget {
       this.price,
       this.isFavourite,
       this.isPopular,
-      this.product})
+      this.product,
+      this.shop})
       : super(key: key);
 
   final double width, aspectRetio;
@@ -37,6 +38,7 @@ class ProductCard1 extends StatelessWidget {
   final double rating;
   final String price;
   final bool isFavourite, isPopular;
+  final String shop;
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +65,7 @@ class ProductCard1 extends StatelessWidget {
                     description: description,
                     price: price,
                     id: id,
+                    shop: shop,
                   ),
                 ),
                 child: Column(
