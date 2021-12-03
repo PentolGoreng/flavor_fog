@@ -26,7 +26,8 @@ class ProductCard1 extends StatelessWidget {
       this.isFavourite,
       this.isPopular,
       this.product,
-      this.shop})
+      this.shop,
+      this.shopId})
       : super(key: key);
 
   final double width, aspectRetio;
@@ -38,7 +39,7 @@ class ProductCard1 extends StatelessWidget {
   final double rating;
   final String price;
   final bool isFavourite, isPopular;
-  final String shop;
+  final String shop, shopId;
 
   @override
   Widget build(BuildContext context) {
@@ -60,13 +61,13 @@ class ProductCard1 extends StatelessWidget {
                 onTap: () => pushNewScreen(
                   context,
                   screen: DetailsScreen(
-                    title: title,
-                    images: images,
-                    description: description,
-                    price: price,
-                    id: id,
-                    shop: shop,
-                  ),
+                      title: title,
+                      images: images,
+                      description: description,
+                      price: price,
+                      id: id,
+                      shop: shop,
+                      shopId: shopId),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

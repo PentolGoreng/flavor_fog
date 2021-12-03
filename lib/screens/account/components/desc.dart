@@ -53,72 +53,10 @@ class _DescScreenState extends State<DescScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text('Name'),
-                    GestureDetector(
-                      onTap: () {
-                        showModalBottomSheet(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(25.0)),
-                            ),
-                            context: context,
-                            builder: (_) => Container(
-                                color: login_bg,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 20),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Center(
-                                      child: Text(
-                                        'Name',
-                                        style: TextStyle(fontSize: 20),
-                                      ),
-                                    ),
-                                    Spacer(),
-                                    TextField(
-                                      decoration: InputDecoration(
-                                          hintText: "Address details"),
-                                      maxLength: 20,
-                                      controller: _nameC,
-                                      onChanged: (text) {
-                                        setState(() {
-                                          _newName = text;
-                                        });
-                                      },
-                                    ),
-
-                                    // TextField(),
-                                    ElevatedButton(
-                                      onPressed: () async {
-                                        FocusScope.of(context).unfocus();
-                                        if (_nameC.text.trim().isEmpty ||
-                                            _nameC.text.trim().isEmpty) {
-                                          return null;
-                                        } else {
-                                          FirebaseFirestore.instance
-                                              .collection('users')
-                                              .doc(user.uid)
-                                              .update({'name': _newName});
-                                        }
-                                        _nameC.clear();
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text('Submit'),
-                                    ),
-                                    SizedBox(
-                                      height: kBottomNavigationBarHeight,
-                                    )
-                                  ],
-                                ))).whenComplete(() {
-                          _nameC.clear();
-                        });
-                      },
-                      child: Text(
-                        name,
-                        style: TextStyle(color: kPrimaryColor),
-                      ),
-                    )
+                    Text(
+                      name,
+                      style: TextStyle(color: kPrimaryColor),
+                    ),
                   ],
                 ),
                 SizedBox(height: 20),
@@ -139,6 +77,10 @@ class _DescScreenState extends State<DescScreen> {
                     Text('Address'),
                     GestureDetector(
                       onTap: () {
+                        if (userImage['address'] != "") {
+                          _addressC =
+                              TextEditingController(text: userImage['address']);
+                        }
                         showModalBottomSheet(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.vertical(
@@ -199,9 +141,13 @@ class _DescScreenState extends State<DescScreen> {
                           _addressC.clear();
                         });
                       },
-                      child: Text(
-                        address == "" ? "+ Add address" : address,
-                        style: TextStyle(color: kPrimaryColor),
+                      child: SizedBox(
+                        width: 200,
+                        child: Text(
+                          address == "" ? "+ Add address" : address,
+                          style: TextStyle(color: kPrimaryColor),
+                          textAlign: TextAlign.right,
+                        ),
                       ),
                     ),
                   ],

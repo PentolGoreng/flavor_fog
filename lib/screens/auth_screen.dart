@@ -41,10 +41,10 @@ class _AuthScreenState extends State<AuthScreen>
   TextEditingController emailController1 = TextEditingController();
   TextEditingController passwordController1 = TextEditingController();
   TextEditingController name = TextEditingController();
+  TextEditingController passwordController2 = TextEditingController();
 
   bool isLoading = false;
-  String p =
-      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+  RegExp regExp1 = RegExp(r'[^A-Za-z0-9]');
   RegExp regExp = RegExp(
       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
   final TextEditingController email = TextEditingController();
@@ -127,39 +127,157 @@ class _AuthScreenState extends State<AuthScreen>
     });
   }
 
-  void vaildation() async {
+  void vaildation2() async {
     if (email.text.isEmpty && password.text.isEmpty) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Both Flied Are Empty"),
+          content: Text('All Fields Are Empty'),
         ),
       );
     } else if (email.text.isEmpty) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Email Is Empty"),
+          content: Text('Email Is Empty'),
         ),
       );
     } else if (!regExp.hasMatch(email.text)) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Please Try Vaild Email"),
+          content: Text('Please Try Vaild Email'),
+        ),
+      );
+    } else if (RegExp(r"\s\b|\b\s").hasMatch(password.text) ||
+        !RegExp(r'^[a-zA-Z0-9_\.]+$').hasMatch(password.text)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Only Use AplhaNumeric And (-, _, .) And No Spaces'),
         ),
       );
     } else if (password.text.isEmpty) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Password Is Empty"),
+          content: Text('Password Is Empty'),
         ),
       );
     } else if (password.text.length < 8) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Password  Is Too Short"),
+          content: Text('Password  Is Too Short'),
         ),
       );
     } else {
-      submit(context);
+      try {
+        await widget._auth.signInWithEmailAndPassword(
+            email: email.text, password: password.text);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Login SuccesFul'),
+            duration: Duration(seconds: 5),
+          ),
+        );
+        pushNewScreen(context,
+            screen: ProvidedStylesExample(
+              menuScreenContext: context,
+            ));
+      } on FirebaseAuthException catch (e) {
+        showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+                  title: const Text(' Ops! Login Failed'),
+                  content: Text(e.message),
+                ));
+      }
+    }
+  }
+
+  void vaildation() async {
+    if (emailController1.text.isEmpty &&
+        passwordController1.text.isEmpty &&
+        name.text.isEmpty &&
+        passwordController2.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('All Flied Are Empty'),
+        ),
+      );
+    } else if (emailController1.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Email Is Empty'),
+        ),
+      );
+    } else if (passwordController2.text.isEmpty ||
+        passwordController2.text != passwordController1.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Confirm Password Should Be The Same'),
+        ),
+      );
+    } else if (!regExp.hasMatch(emailController1.text)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please Try Vaild Email'),
+        ),
+      );
+    } else if (RegExp(r"\s\b|\b\s").hasMatch(name.text) ||
+        !RegExp(r'^[a-zA-Z0-9_\.]+$').hasMatch(name.text)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Only Use AplhaNumeric And (-, _, .) And No Spaces'),
+        ),
+      );
+    } else if (RegExp(r"\s\b|\b\s").hasMatch(passwordController1.text) ||
+        !RegExp(r'^[a-zA-Z0-9_\.]+$').hasMatch(passwordController1.text)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Only Use AplhaNumeric And (-, _, .) And No Spaces'),
+        ),
+      );
+    } else if (RegExp(r"\s\b|\b\s").hasMatch(passwordController2.text) ||
+        !RegExp(r'^[a-zA-Z0-9_\.]+$').hasMatch(passwordController2.text)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Only Use AplhaNumeric And (-, _, .) And No Spaces'),
+        ),
+      );
+    } else if (passwordController1.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Password Is Empty'),
+        ),
+      );
+    } else if (name.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please Set Username'),
+        ),
+      );
+    } else if (passwordController1.text.length < 8) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Password  Is Too Short'),
+        ),
+      );
+    } else {
+      try {
+        await widget._auth.createUserWithEmailAndPassword(
+            email: emailController1.text, password: passwordController1.text);
+        inputData1();
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Sucessfully Register.You Can Login Now'),
+            duration: Duration(seconds: 5),
+          ),
+        );
+        updateView();
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString()),
+          ),
+        );
+      }
     }
   }
 
@@ -218,7 +336,22 @@ class _AuthScreenState extends State<AuthScreen>
                     height: _size.height,
                     left: _isShowSignUp ? -_size.width * 0.76 : 0,
                     child: Container(
-                        color: login_bg,
+                        decoration: _isShowSignUp
+                            ? BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: kPrimaryColor,
+                                  ),
+                                  BoxShadow(
+                                      color: login_bg,
+                                      offset: Offset.fromDirection(
+                                          !_isShowSignUp ? 0 : 270, -5),
+                                      blurRadius: 4,
+                                      spreadRadius: 4),
+                                ],
+                              )
+                            : null,
+                        // color: _isShowSignUp ? Colors.brown.shade200 : login_bg,
                         child: Padding(
                             padding: EdgeInsets.symmetric(
                                 horizontal:
@@ -272,7 +405,22 @@ class _AuthScreenState extends State<AuthScreen>
                   height: _size.height,
                   left: _isShowSignUp ? _size.width * 0.12 : _size.width * 0.88,
                   child: Container(
-                    color: signup_bg,
+                    decoration: !_isShowSignUp
+                        ? BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: kPrimaryColor,
+                              ),
+                              BoxShadow(
+                                  color: login_bg,
+                                  offset: Offset.fromDirection(
+                                      !_isShowSignUp ? 270 : 0, 5),
+                                  blurRadius: 4,
+                                  spreadRadius: 4),
+                            ],
+                          )
+                        : null,
+                    // color: !_isShowSignUp ? kPrimaryColor : login_bg,
                     child: Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: MediaQuery.of(context).size.width * 0.13),
@@ -282,7 +430,7 @@ class _AuthScreenState extends State<AuthScreen>
                             children: [
                               Spacer(),
                               TextFormField(
-                                style: TextStyle(color: Colors.black),
+                                style: TextStyle(color: Colors.white),
                                 // obscureText: true,
                                 controller: name,
                                 onChanged: (value) {
@@ -298,7 +446,7 @@ class _AuthScreenState extends State<AuthScreen>
                               ),
                               Spacer(),
                               TextFormField(
-                                style: TextStyle(color: Colors.black),
+                                style: TextStyle(color: Colors.white),
                                 onChanged: (value) {
                                   print(value);
                                 },
@@ -316,7 +464,7 @@ class _AuthScreenState extends State<AuthScreen>
                                 padding: const EdgeInsets.symmetric(
                                     vertical: defaultPadding),
                                 child: TextFormField(
-                                  style: TextStyle(color: Colors.black),
+                                  style: TextStyle(color: Colors.white),
                                   obscureText: true,
                                   onChanged: (value) {
                                     print(value);
@@ -332,11 +480,12 @@ class _AuthScreenState extends State<AuthScreen>
                                 ),
                               ),
                               TextFormField(
-                                style: TextStyle(color: Colors.black),
+                                style: TextStyle(color: Colors.white),
                                 obscureText: true,
                                 onChanged: (value) {
                                   print(value);
                                 },
+                                controller: passwordController2,
                                 decoration: const InputDecoration(
                                   fillColor: Colors.white,
                                   hintText: "Confirm Password",
@@ -377,7 +526,7 @@ class _AuthScreenState extends State<AuthScreen>
                     style: TextStyle(
                       fontSize: _isShowSignUp ? 20 : 32,
                       fontWeight: FontWeight.bold,
-                      color: _isShowSignUp ? Colors.white : Colors.white70,
+                      color: _isShowSignUp ? kPrimaryColor : Colors.white70,
                     ),
                     child: Transform.rotate(
                       angle: -_animationTextRotate.value * pi / 180,
@@ -390,29 +539,7 @@ class _AuthScreenState extends State<AuthScreen>
                             updateView();
                           } else {
                             print(emailController.text);
-                            try {
-                              await widget._auth.signInWithEmailAndPassword(
-                                  email: email.text, password: password.text);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Login SuccesFul'),
-                                  duration: Duration(seconds: 5),
-                                ),
-                              );
-                              pushNewScreen(context,
-                                  screen: ProvidedStylesExample(
-                                    menuScreenContext: context,
-                                  ));
-                            } on FirebaseAuthException catch (e) {
-                              showDialog(
-                                  context: context,
-                                  builder: (ctx) => AlertDialog(
-                                        title: const Text(
-                                            ' Ops! Registration Failed'),
-                                        content: Text(e.message),
-                                      ));
-                            }
-                            inputData();
+                            vaildation2();
                           }
                         },
 
@@ -472,7 +599,7 @@ class _AuthScreenState extends State<AuthScreen>
                     style: TextStyle(
                       fontSize: !_isShowSignUp ? 20 : 32,
                       fontWeight: FontWeight.bold,
-                      color: !_isShowSignUp ? Colors.white : Colors.white70,
+                      color: !_isShowSignUp ? kPrimaryColor : Colors.white70,
                     ),
                     child: Transform.rotate(
                       angle: (90 - _animationTextRotate.value) * pi / 180,
@@ -481,16 +608,12 @@ class _AuthScreenState extends State<AuthScreen>
                         onTap: () async {
                           if (_isShowSignUp) {
                             // try {
-                            await widget._auth.createUserWithEmailAndPassword(
-                                email: emailController1.text,
-                                password: passwordController1.text);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                    'Sucessfully Register.You Can Login Now'),
-                                duration: Duration(seconds: 5),
-                              ),
-                            );
+                            try {
+                              vaildation();
+                            } catch (e) {
+                              print(e);
+                            }
+
                             //   Navigator.of(context).pop();
                             // } on FirebaseAuthException catch (e) {
                             //   showDialog(
@@ -500,13 +623,13 @@ class _AuthScreenState extends State<AuthScreen>
                             //                 ' Ops! Registration Failed'),
                             //             content: Text(e.message),
                             //           ));
-                            inputData1();
+
                             // setState(() {
 
                             // });
 
                             // <-- Your data
-                            updateView();
+
                           } else {
                             updateView();
                           }

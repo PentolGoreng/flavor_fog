@@ -1,9 +1,14 @@
 //@dart=2.9
 
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
 
 class ProfilePic extends StatefulWidget {
   ProfilePic({
@@ -15,6 +20,8 @@ class ProfilePic extends StatefulWidget {
 }
 
 class _ProfilePicState extends State<ProfilePic> {
+  File _imageFile;
+  final _picker = ImagePicker();
   final auth = FirebaseAuth.instance;
   final db = FirebaseFirestore.instance;
   User user = FirebaseAuth.instance.currentUser;
@@ -36,11 +43,16 @@ class _ProfilePicState extends State<ProfilePic> {
             width: 115,
             child:
                 Stack(fit: StackFit.expand, clipBehavior: Clip.none, children: [
-              CircleAvatar(
-                child: ClipOval(
-                  child: Image.network('$image'),
+              Container(
+                  decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  image: NetworkImage(
+                    '$image',
+                  ),
+                  fit: BoxFit.cover,
                 ),
-              ),
+              )),
               Positioned(
                 right: -16,
                 bottom: 0,
@@ -56,7 +68,28 @@ class _ProfilePicState extends State<ProfilePic> {
                       primary: Colors.white,
                       backgroundColor: Color(0xFFF5F6F9),
                     ),
-                    onPressed: () {},
+                    onPressed: () async {
+                      final pickedFile =
+                          await _picker.pickImage(source: ImageSource.gallery);
+                      if (pickedFile == null) {
+                      } else {
+                        setState(() {
+                          _imageFile = File(pickedFile.path);
+                        });
+                        String fileName = basename(_imageFile.path);
+                        FirebaseStorage storage = FirebaseStorage.instance;
+                        Reference ref =
+                            storage.ref().child('uploads/$fileName');
+                        UploadTask uploadTask = ref.putFile(_imageFile);
+                        uploadTask.then((res) {
+                          res.ref.getDownloadURL().then((res) =>
+                              FirebaseFirestore.instance
+                                  .collection('users')
+                                  .doc(user.uid)
+                                  .update({'image': res}));
+                        });
+                      }
+                    },
                     child: SvgPicture.asset("assets/icons/Camera Icon.svg"),
                   ),
                 ),

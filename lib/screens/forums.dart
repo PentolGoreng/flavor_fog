@@ -23,6 +23,7 @@ class _ForumsScreenState extends State<ForumsScreen> {
   var _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final TextEditingController titleController = TextEditingController();
+  final TextEditingController forumController = TextEditingController();
   _submit() async {
     final user = await FirebaseAuth.instance.currentUser;
     final userData = await FirebaseFirestore.instance
@@ -35,12 +36,14 @@ class _ForumsScreenState extends State<ForumsScreen> {
       'userId': user.uid,
       'firstName': userData['name'],
       'userImage': userData['image'],
+      'topic': forumController.text,
     });
     Navigator.pop(context);
     titleController.clear();
   }
 
   var _newTitle = '';
+  var _newTopic = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,6 +84,14 @@ class _ForumsScreenState extends State<ForumsScreen> {
                   onChanged: (text) {
                     setState(() {
                       _newTitle = text;
+                    });
+                  },
+                ),
+                TextField(
+                  controller: forumController,
+                  onChanged: (text) {
+                    setState(() {
+                      _newTopic = text;
                     });
                   },
                 ),

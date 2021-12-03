@@ -23,6 +23,7 @@ class DetailsScreen extends StatelessWidget {
     this.isFavourite,
     this.isPopular,
     this.shop,
+    this.shopId,
   });
   final String id;
   final String title, description;
@@ -32,7 +33,7 @@ class DetailsScreen extends StatelessWidget {
   final String price;
   final bool isFavourite, isPopular;
   List<double> rateList = [];
-  final String shop;
+  final String shop, shopId;
 
   double _rating1 = 0;
 
@@ -96,13 +97,13 @@ class DetailsScreen extends StatelessWidget {
               child: CustomAppBar(rating: rating1),
             ),
             body: Body(
-              title: title,
-              price: price,
-              description: description,
-              images: images,
-              id: id,
-              shop: shop,
-            ),
+                title: title,
+                price: price,
+                description: description,
+                images: images,
+                id: id,
+                shop: shop,
+                shopId: shopId),
           );
         });
   }

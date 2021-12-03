@@ -16,9 +16,10 @@ class CartCard extends StatelessWidget {
     this.images,
     this.title,
     this.price,
+    this.color,
   }) : super(key: key);
   final String images;
-
+  final Color color;
   final String id, title, price;
   final int item;
   // final Cart cart;

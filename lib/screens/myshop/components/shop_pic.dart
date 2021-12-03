@@ -128,94 +128,121 @@ class _MyShopPicState extends State<MyShopPic>
                       backgroundColor: Color(0xFFF5F6F9),
                     ),
                     onPressed: () async {
-                      updateView();
-                    },
-                    child: SvgPicture.asset("assets/icons/Camera Icon.svg"),
-                  ),
-                ),
-              ),
-              AnimatedPositioned(
-                duration: defaultDuration,
-                right: _isSelected ? -16 : -25,
-                bottom: _isSelected ? 0 : -60,
-                child: SizedBox(
-                  height: 46,
-                  width: 46,
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50),
-                        side: BorderSide(color: Colors.white),
-                      ),
-                      primary: Colors.white,
-                      backgroundColor: Color(0xFFF5F6F9),
-                    ),
-                    onPressed: () async {
-                      final pickedFile =
-                          await _picker.pickImage(source: ImageSource.camera);
-                      pickedFile == null
-                          ? null
-                          : setState(() {
-                              _imageFile = File(pickedFile.path);
-                            });
-
-                      String fileName = basename(_imageFile.path);
-                      FirebaseStorage storage = FirebaseStorage.instance;
-                      Reference ref = storage.ref().child('uploads/$fileName');
-                      UploadTask uploadTask = ref.putFile(_imageFile);
-                      uploadTask.then((res) {
-                        res.ref.getDownloadURL().then((res) => FirebaseFirestore
-                            .instance
-                            .collection('shops')
-                            .doc(widget.shopId)
-                            .update({'image': res}));
-                      });
-                    },
-                    child: SvgPicture.asset("assets/icons/Camera Icon.svg"),
-                  ),
-                ),
-              ),
-              AnimatedPositioned(
-                duration: defaultDuration,
-                right: _isSelected ? -16 : -78,
-                bottom: _isSelected ? 0 : -10,
-                child: SizedBox(
-                  height: 46,
-                  width: 46,
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50),
-                        side: BorderSide(color: Colors.white),
-                      ),
-                      primary: Colors.white,
-                      backgroundColor: Color(0xFFF5F6F9),
-                    ),
-                    onPressed: () async {
                       final pickedFile =
                           await _picker.pickImage(source: ImageSource.gallery);
-                      pickedFile == null
-                          ? null
-                          : setState(() {
-                              _imageFile = File(pickedFile.path);
-                            });
-
-                      String fileName = basename(_imageFile.path);
-                      FirebaseStorage storage = FirebaseStorage.instance;
-                      Reference ref = storage.ref().child('uploads/$fileName');
-                      UploadTask uploadTask = ref.putFile(_imageFile);
-                      uploadTask.then((res) {
-                        res.ref.getDownloadURL().then((res) => FirebaseFirestore
-                            .instance
-                            .collection('shops')
-                            .doc(widget.shopId)
-                            .update({'image': res}));
-                      });
+                      if (pickedFile == null) {
+                      } else {
+                        setState(() {
+                          _imageFile = File(pickedFile.path);
+                        });
+                        String fileName = basename(_imageFile.path);
+                        FirebaseStorage storage = FirebaseStorage.instance;
+                        Reference ref =
+                            storage.ref().child('uploads/$fileName');
+                        UploadTask uploadTask = ref.putFile(_imageFile);
+                        uploadTask.then((res) {
+                          res.ref.getDownloadURL().then((res) =>
+                              FirebaseFirestore.instance
+                                  .collection('shops')
+                                  .doc(widget.shopId)
+                                  .update({'image': res}));
+                        });
+                      }
                     },
                     child: SvgPicture.asset("assets/icons/Camera Icon.svg"),
                   ),
                 ),
-              )
+              ),
+              // AnimatedPositioned(
+              //   duration: defaultDuration,
+              //   right: _isSelected ? -16 : -25,
+              //   bottom: _isSelected ? 0 : -60,
+              //   child: SizedBox(
+              //     height: 46,
+              //     width: 46,
+              //     child: TextButton(
+              //       style: TextButton.styleFrom(
+              //         shape: RoundedRectangleBorder(
+              //           borderRadius: BorderRadius.circular(50),
+              //           side: BorderSide(color: Colors.white),
+              //         ),
+              //         primary: Colors.white,
+              //         backgroundColor: Color(0xFFF5F6F9),
+              //       ),
+              //       onPressed: () async {
+              //         if (_isSelected) {
+              //         } else {
+              //           final pickedFile =
+              //               await _picker.pickImage(source: ImageSource.camera);
+              //           pickedFile == null
+              //               ? null
+              //               : setState(() {
+              //                   _imageFile = File(pickedFile.path);
+              //                 });
+
+              //           String fileName = basename(_imageFile.path);
+              //           FirebaseStorage storage = FirebaseStorage.instance;
+              //           Reference ref =
+              //               storage.ref().child('uploads/$fileName');
+              //           UploadTask uploadTask = ref.putFile(_imageFile);
+              //           uploadTask.then((res) {
+              //             res.ref.getDownloadURL().then((res) =>
+              //                 FirebaseFirestore.instance
+              //                     .collection('shops')
+              //                     .doc(widget.shopId)
+              //                     .update({'image': res}));
+              //           });
+              //         }
+              //       },
+              //       child: SvgPicture.asset("assets/icons/Camera Icon.svg"),
+              //     ),
+              //   ),
+              // ),
+              // AnimatedPositioned(
+              //   duration: defaultDuration,
+              //   right: _isSelected ? -16 : -78,
+              //   bottom: _isSelected ? 0 : -10,
+              //   child: SizedBox(
+              //     height: 46,
+              //     width: 46,
+              //     child: TextButton(
+              //       style: TextButton.styleFrom(
+              //         shape: RoundedRectangleBorder(
+              //           borderRadius: BorderRadius.circular(50),
+              //           side: BorderSide(color: Colors.white),
+              //         ),
+              //         primary: Colors.white,
+              //         backgroundColor: Color(0xFFF5F6F9),
+              //       ),
+              //       onPressed: () async {
+              //         if (_isSelected) {
+              //           final pickedFile = await _picker.pickImage(
+              //               source: ImageSource.gallery);
+              //           pickedFile == ""
+              //               ? null
+              //               : setState(() {
+              //                   _imageFile = File(pickedFile.path);
+              //                 });
+              //           String fileName = basename(_imageFile.path);
+              //           FirebaseStorage storage = FirebaseStorage.instance;
+              //           Reference ref =
+              //               storage.ref().child('uploads/$fileName');
+              //           UploadTask uploadTask = ref.putFile(_imageFile);
+              //           uploadTask.then((res) {
+              //             res.ref.getDownloadURL().then((res) =>
+              //                 FirebaseFirestore.instance
+              //                     .collection('shops')
+              //                     .doc(widget.shopId)
+              //                     .update({'image': res}));
+              //           });
+              //         } else {
+              //           updateView();
+              //         }
+              //       },
+              //       child: SvgPicture.asset("assets/icons/Camera Icon.svg"),
+              //     ),
+              //   ),
+              // )
             ]));
       },
     );

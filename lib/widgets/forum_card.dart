@@ -51,8 +51,9 @@ class _ForumCardState extends State<ForumCard> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => ChatScreen(
-                                documentId: snapshot.data.docs[index].id,
-                              ))),
+                              documentId: snapshot.data.docs[index].id,
+                              title: chatDocuments[index]['title'],
+                              topic: snapshot.data.docs[index]['topic']))),
                   child: Card(
                     color: login_bg,
                     elevation: 8,
@@ -60,17 +61,25 @@ class _ForumCardState extends State<ForumCard> {
                       title: Text(chatDocuments[index]['title']),
                       subtitle: Text(DateFormat('dd-MM-yyyy HH:mm')
                           .format(chatDocuments[index]['sentAt'].toDate())),
-                      trailing: IconButton(
-                          icon: Icon(uid == chatDocuments[index]['userId']
-                              ? Icons.delete
-                              : null),
-                          onPressed: () async {
-                            await FirebaseFirestore.instance.runTransaction(
-                                (Transaction myTransaction) async {
-                              await myTransaction
-                                  .delete(snapshot.data.docs[index].reference);
-                            });
-                          }),
+                      // trailing: uid == chatDocuments[index]['userId']
+                      //     ? IconButton(
+                      //         icon: Icon(
+                      //           Icons.delete,
+                      //           color: kPrimaryColor,
+                      //         ),
+                      //         onPressed: () async {
+                      //           if (uid == chatDocuments[index]['userId']) {
+                      //             await FirebaseFirestore.instance
+                      //                 .runTransaction(
+                      //                     (Transaction myTransaction) async {
+                      //               await myTransaction.delete(
+                      //                   snapshot.data.docs[index].reference);
+                      //             });
+                      //           } else {
+                      //             null;
+                      //           }
+                      //         })
+                      //     : null,
                     ),
                   ),
                 ));

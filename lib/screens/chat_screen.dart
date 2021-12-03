@@ -8,7 +8,10 @@ import 'package:flavor_fog/widgets/new_message.dart';
 
 class ChatScreen extends StatefulWidget {
   final String documentId;
-  const ChatScreen({Key key, this.documentId}) : super(key: key);
+  final String topic;
+  final String title;
+  const ChatScreen({Key key, this.documentId, this.topic, this.title})
+      : super(key: key);
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -43,7 +46,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Chats'),
+          title: Text(widget.title),
           actions: [
             // IconButton(
             //     icon: Icon(Icons.exit_to_app),
@@ -56,10 +59,10 @@ class _ChatScreenState extends State<ChatScreen> {
           padding: EdgeInsets.only(bottom: kBottomNavigationBarHeight),
           child: Column(
             children: [
-              Expanded(
-                  child: MessagesWidget(
+              MessagesWidget(
                 documentId: widget.documentId,
-              )),
+                topic: widget.topic,
+              ),
               NewMessage(
                 documentId: widget.documentId,
               )

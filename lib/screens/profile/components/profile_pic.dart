@@ -40,11 +40,16 @@ class _ProfilePicState extends State<ProfilePic> {
             width: 115,
             child:
                 Stack(fit: StackFit.expand, clipBehavior: Clip.none, children: [
-              CircleAvatar(
-                child: ClipOval(
-                  child: Image.network('$image'),
+              Container(
+                  decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  image: NetworkImage(
+                    '$image',
+                  ),
+                  fit: BoxFit.cover,
                 ),
-              ),
+              )),
               // Positioned(
               //   right: -16,
               //   bottom: 0,

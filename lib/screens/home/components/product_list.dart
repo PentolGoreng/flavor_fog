@@ -127,7 +127,8 @@ class _ProductListState extends State<ProductList>
                                 id: productDB[index]['id'],
                                 images: List.from(productDB[index]['images']),
                                 description: productDB[index]['desc'],
-                                shop: productDB[index]['shopId']);
+                                shop: productDB[index]['shop'],
+                                shopId: productDB[index]['shopId']);
                             return SizedBox
                                 .shrink(); // here by default width and height is 0
                           },

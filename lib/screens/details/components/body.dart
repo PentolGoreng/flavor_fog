@@ -24,7 +24,7 @@ class Body extends StatelessWidget {
   final double rating;
   final String price;
   final bool isFavourite, isPopular;
-  final String shop;
+  final String shop, shopId;
 
   Body(
       {Key? key,
@@ -38,7 +38,8 @@ class Body extends StatelessWidget {
       required this.price,
       required this.isFavourite,
       required this.isPopular,
-      required this.shop})
+      required this.shop,
+      required this.shopId})
       : super(key: key);
 
   @override
@@ -187,7 +188,8 @@ class Body extends StatelessWidget {
                                                         .doc(id)
                                                         .set({
                                                       'productId': id,
-                                                      'shopId': shop,
+                                                      'shop': shop,
+                                                      'shopId': shopId,
                                                       'total': _item1,
                                                       'title': title,
                                                       'price': price,
