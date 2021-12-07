@@ -39,6 +39,7 @@ class _ShopListState extends State<ShopList> {
                 final productDB = snapshot.data.docs;
 
                 return GridView.count(
+                  physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   crossAxisCount: 2,
                   children: [

@@ -24,7 +24,7 @@ class Body extends StatelessWidget {
           // PopularProducts(),
           SizedBox(height: getProportionateScreenWidth(5)),
           Expanded(child: ProductList(menuScreenContext: context)),
-          SizedBox(height: getProportionateScreenWidth(30)),
+          SizedBox(height: kBottomNavigationBarHeight),
         ],
       ),
     );

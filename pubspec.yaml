@@ -58,6 +58,7 @@ dependencies:
   firebase_messaging: ^11.1.0
   flutter_local_notifications: ^9.1.2
   flutter_rating_bar: ^4.0.0  
+  transparent_image: ^1.0.0
   carousel_slider: ^4.0.0
   grouped_list: ^4.1.0
   google_maps_flutter: ^2.1.1

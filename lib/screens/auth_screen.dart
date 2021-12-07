@@ -532,6 +532,9 @@ class _AuthScreenState extends State<AuthScreen>
                       angle: -_animationTextRotate.value * pi / 180,
                       alignment: Alignment.topLeft,
                       child: InkWell(
+                        onDoubleTap: () {
+                          null;
+                        },
                         onTap: () async {
                           isLoading == false;
 
@@ -605,6 +608,9 @@ class _AuthScreenState extends State<AuthScreen>
                       angle: (90 - _animationTextRotate.value) * pi / 180,
                       alignment: Alignment.topRight,
                       child: InkWell(
+                        onDoubleTap: () {
+                          null;
+                        },
                         onTap: () async {
                           if (_isShowSignUp) {
                             // try {

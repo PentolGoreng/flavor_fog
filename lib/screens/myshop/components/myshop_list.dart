@@ -39,6 +39,7 @@ class _MyShopListState extends State<MyShopList> {
                 final productDB = snapshot.data.docs;
 
                 return GridView.count(
+                  physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   crossAxisCount: 2,
                   children: [
@@ -76,6 +77,9 @@ class _MyShopListState extends State<MyShopList> {
                     //     firstName: chatDocuments[index]['name'],
                     //     imageUrl: chatDocuments[index]['image'],
                     //   )
+                    SizedBox(
+                      height: kBottomNavigationBarHeight,
+                    )
                   ],
                 );
               },
@@ -94,7 +98,9 @@ class _MyShopListState extends State<MyShopList> {
             //   ),
             // ]),
 
-            // SizedBox(width: getProportionateScreenWidth(20)),
+            SizedBox(
+              height: kBottomNavigationBarHeight,
+            ),
           ],
         ),
       ],

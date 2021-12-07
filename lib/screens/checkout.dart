@@ -11,8 +11,9 @@ import '../size_config.dart';
 class CheckOut extends StatefulWidget {
   const CheckOut({
     Key key,
+    this.selected,
   }) : super(key: key);
-
+  final String selected;
   @override
   _CheckOutState createState() => _CheckOutState();
 }
@@ -31,6 +32,7 @@ class _CheckOutState extends State<CheckOut> {
               .collection('users')
               .doc(_uid)
               .collection('cart')
+              .where('shop', isEqualTo: widget.selected)
               .snapshots(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -183,7 +185,9 @@ class _CheckOutState extends State<CheckOut> {
                                             });
                                           },
                                           child: Text(
-                                            checkDB1[0]['address'] == ""
+                                            checkDB1[0]['address'] == "" ||
+                                                    checkDB1[0]['address'] ==
+                                                        null
                                                 ? '+ Add address'
                                                 : checkDB1[0]['address'],
                                             style: TextStyle(
