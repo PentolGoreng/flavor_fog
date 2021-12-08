@@ -7,6 +7,7 @@ import 'package:flavor_fog/screens/account/account_screen.dart';
 import 'package:flavor_fog/screens/auth_screen.dart';
 import 'package:flavor_fog/screens/chats/chats_screen.dart';
 import 'package:flavor_fog/screens/forums.dart';
+import 'package:flavor_fog/screens/home/components/product_list.dart';
 import 'package:flavor_fog/screens/messages/message_screen.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flavor_fog/screens/cart/cart_screen.dart';
@@ -42,4 +43,5 @@ final Map<String, WidgetBuilder> routes = {
   RSSReader.routeName: (context) => RSSReader(),
   AccountScreen.routeName: (context) => AccountScreen(),
   ForumsScreen.routeName: (context) => ForumsScreen(),
+  ProductList.routeName: (context) => ProductList(),
 };

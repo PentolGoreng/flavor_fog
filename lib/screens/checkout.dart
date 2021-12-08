@@ -1,5 +1,5 @@
 //@dart=2.9
-
+import 'package:firebase_database/firebase_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flavor_fog/constants.dart';
@@ -22,7 +22,10 @@ final user = FirebaseAuth.instance.currentUser;
 String _uid = user.uid;
 
 class _CheckOutState extends State<CheckOut> {
+  String deliv = "";
+  FirebaseDatabase database = FirebaseDatabase.instance;
   String _newAdd;
+  int number;
   TextEditingController _addressC = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -40,6 +43,23 @@ class _CheckOutState extends State<CheckOut> {
             }
             final checkDB = snapshot.data.docs;
 
+            // DocumentReference<Map<String, dynamic>> documentReference;
+            DatabaseReference ref = FirebaseDatabase(
+                    databaseURL:
+                        "https://flavour-fog-default-rtdb.asia-southeast1.firebasedatabase.app")
+                // .instance
+                .ref("${checkDB[0]['shop']}/request/$_uid");
+            // FirebaseDatabase.instance
+            //     .ref()
+            //     .child("${checkDB[0]['shop']}/request/$_uid");
+
+// Get the Stream
+            Stream<DatabaseEvent> stream = ref.onValue;
+            stream.listen((DatabaseEvent event) {
+              // deliv = event.snapshot.value;
+              print('Event Type: ${event.type}'); // DatabaseEventType.value;
+              print('Snapshot: ${event.snapshot}'); // DataSnapshot
+            });
             return StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection('users')
@@ -263,6 +283,27 @@ class _CheckOutState extends State<CheckOut> {
                             ),
                           ),
                         ),
+                        SizedBox(
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: deliv == null || deliv == ""
+                                ? Text('Waiting')
+                                : Text(deliv),
+                          ),
+                        ),
+                        TextButton(
+                            onPressed: () async {
+                              for (var i = 0; i < checkDB.length; i++) {
+                                await ref.set({
+                                  "request": "waiting",
+                                  "id": checkDB[i]['productId'],
+                                  "title": checkDB[i]['title'],
+                                  "price": checkDB[i]['price'],
+                                  "number": checkDB[i]['total'],
+                                });
+                              }
+                            },
+                            child: Center(child: Text('Submit Order')))
                       ],
                     ),
                   );
