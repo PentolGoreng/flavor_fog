@@ -35,9 +35,11 @@ class MyApp extends StatelessWidget {
       // home: SplashScreen(),
       // We use routeName so that we dont need to remember the name
       // initialRoute: _user(),
-      home: user != null
-          ? ProvidedStylesExample(menuScreenContext: context)
-          : AuthScreen(),
+      home:
+          // user != null
+          //     ? ProvidedStylesExample(menuScreenContext: context)
+          //     :
+          AuthScreen(),
       routes: routes,
     );
   }

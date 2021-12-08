@@ -77,7 +77,8 @@ class _DescScreenState extends State<DescScreen> {
                     Text('Address'),
                     GestureDetector(
                       onTap: () {
-                        if (userImage['address'] != "") {
+                        if (userImage['address'] != "" ||
+                            userImage['address'] == null) {
                           _addressC =
                               TextEditingController(text: userImage['address']);
                         }

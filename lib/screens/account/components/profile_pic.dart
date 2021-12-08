@@ -76,10 +76,12 @@ class _ProfilePicState extends State<ProfilePic> {
                         setState(() {
                           _imageFile = File(pickedFile.path);
                         });
-                        String fileName = basename(_imageFile.path);
+                        // String fileName = basename(_imageFile.path);
+                        String fileName = userImage['name'];
                         FirebaseStorage storage = FirebaseStorage.instance;
-                        Reference ref =
-                            storage.ref().child('uploads/$fileName');
+                        Reference ref = storage
+                            .ref()
+                            .child('Profile/${userImage['name']}/$fileName');
                         UploadTask uploadTask = ref.putFile(_imageFile);
                         uploadTask.then((res) {
                           res.ref.getDownloadURL().then((res) =>

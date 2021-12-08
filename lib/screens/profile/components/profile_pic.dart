@@ -40,16 +40,32 @@ class _ProfilePicState extends State<ProfilePic> {
             width: 115,
             child:
                 Stack(fit: StackFit.expand, clipBehavior: Clip.none, children: [
-              Container(
-                  decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: NetworkImage(
-                    '$image',
+              // Container(
+              //     decoration: BoxDecoration(
+              //   shape: BoxShape.circle,
+              //   image: DecorationImage(
+              //     image: Image.network(
+              //       image,
+              //       errorBuilder: (BuildContext context, Object exception,
+              //           StackTrace stackTrace) {
+              //         return Image.asset('assets/images/profileakun.png');
+              //       },
+              //     ),
+              //     fit: BoxFit.cover,
+              //   ),
+              // )),
+              CircleAvatar(
+                radius: 18,
+                child: ClipOval(
+                  child: Image.network(
+                    image,
+                    errorBuilder: (BuildContext context, Object exception,
+                        StackTrace stackTrace) {
+                      return Image.asset('assets/images/profileakun.png');
+                    },
                   ),
-                  fit: BoxFit.cover,
                 ),
-              )),
+              ),
               // Positioned(
               //   right: -16,
               //   bottom: 0,

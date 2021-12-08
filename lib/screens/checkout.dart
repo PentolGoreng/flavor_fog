@@ -44,10 +44,7 @@ class _CheckOutState extends State<CheckOut> {
             final checkDB = snapshot.data.docs;
 
             // DocumentReference<Map<String, dynamic>> documentReference;
-            DatabaseReference ref = FirebaseDatabase(
-                    databaseURL:
-                        "https://flavour-fog-default-rtdb.asia-southeast1.firebasedatabase.app")
-                // .instance
+            DatabaseReference ref = FirebaseDatabase.instance
                 .ref("${checkDB[0]['shop']}/request/$_uid");
             // FirebaseDatabase.instance
             //     .ref()
@@ -56,9 +53,15 @@ class _CheckOutState extends State<CheckOut> {
 // Get the Stream
             Stream<DatabaseEvent> stream = ref.onValue;
             stream.listen((DatabaseEvent event) {
-              // deliv = event.snapshot.value;
               print('Event Type: ${event.type}'); // DatabaseEventType.value;
-              print('Snapshot: ${event.snapshot}'); // DataSnapshot
+              print('Snapshot: ${event.snapshot}');
+
+              Map<dynamic, dynamic> values = event.snapshot.value;
+              values.forEach((key, values) {
+                print(values["title"]);
+                print(values["price"]);
+                deliv = values["request"];
+              });
             });
             return StreamBuilder(
                 stream: FirebaseFirestore.instance
@@ -286,7 +289,9 @@ class _CheckOutState extends State<CheckOut> {
                         SizedBox(
                           child: Align(
                             alignment: Alignment.centerRight,
-                            child: deliv == null || deliv == ""
+                            child: deliv == null ||
+                                    deliv == "" ||
+                                    deliv == "waiting"
                                 ? Text('Waiting')
                                 : Text(deliv),
                           ),
@@ -294,7 +299,13 @@ class _CheckOutState extends State<CheckOut> {
                         TextButton(
                             onPressed: () async {
                               for (var i = 0; i < checkDB.length; i++) {
-                                await ref.set({
+                                await FirebaseDatabase(
+                                        databaseURL:
+                                            "https://flavour-fog-default-rtdb.asia-southeast1.firebasedatabase.app")
+                                    // .instance
+                                    .ref(
+                                        "${checkDB[0]['shop']}/request/$_uid/${checkDB[i]['title']}")
+                                    .set({
                                   "request": "waiting",
                                   "id": checkDB[i]['productId'],
                                   "title": checkDB[i]['title'],

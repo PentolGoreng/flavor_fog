@@ -5,7 +5,7 @@ import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:email_auth/email_auth.dart';
 import 'package:flavor_fog/screens/home/home_screen.dart';
 import 'package:flavor_fog/size_config.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +42,7 @@ class _AuthScreenState extends State<AuthScreen>
   TextEditingController passwordController1 = TextEditingController();
   TextEditingController name = TextEditingController();
   TextEditingController passwordController2 = TextEditingController();
-
+  EmailAuth emailAuth;
   bool isLoading = false;
   RegExp regExp1 = RegExp(r'[^A-Za-z0-9]');
   RegExp regExp = RegExp(
@@ -51,6 +51,8 @@ class _AuthScreenState extends State<AuthScreen>
   final TextEditingController userName = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController password = TextEditingController();
+  final TextEditingController _otpcontroller = TextEditingController();
+  bool submitValid = false;
   // final scaffoldKey = GlobalKey<ScaffoldState>();
   // BuildContext context;
   // AppMethods appMethods = Auth as AppMethods;
@@ -65,7 +67,7 @@ class _AuthScreenState extends State<AuthScreen>
         'name': name.text,
         'email': emailController1.text,
         'uid': uid,
-        'address': '+Add address',
+        'address': '',
         'image':
             'https://firebasestorage.googleapis.com/v0/b/flavour-fog.appspot.com/o/Profile%2Fprofile.jpg?alt=media&token=ddf7ce8f-70b7-40c9-beaf-e4fb8688c6d8',
       }).catchError((error) => print('Add failed: $error'));
@@ -190,6 +192,7 @@ class _AuthScreenState extends State<AuthScreen>
     }
   }
 
+  String existName;
   void vaildation() async {
     if (emailController1.text.isEmpty &&
         passwordController1.text.isEmpty &&
@@ -260,23 +263,44 @@ class _AuthScreenState extends State<AuthScreen>
       );
     } else {
       try {
-        await widget._auth.createUserWithEmailAndPassword(
-            email: emailController1.text, password: passwordController1.text);
-        inputData1();
+// if the size of value is greater then 0 then that doc exist.
+        await FirebaseFirestore.instance
+            .collection('users')
+            .where('name', isEqualTo: name.text)
+            .get()
+            .then((value) async {
+          if (value.size > 0) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Username Already Exists'),
+              ),
+            );
+          } else {
+            try {
+              await widget._auth.createUserWithEmailAndPassword(
+                  email: emailController1.text,
+                  password: passwordController1.text);
+              inputData1();
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Sucessfully Register.You Can Login Now'),
-            duration: Duration(seconds: 5),
-          ),
-        );
-        updateView();
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Sucessfully Register.You Can Login Now'),
+                  duration: Duration(seconds: 5),
+                ),
+              );
+              updateView();
+            } catch (e) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(e.toString()),
+                ),
+              );
+            }
+            ;
+          }
+        });
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-          ),
-        );
+        debugPrint(e.toString());
       }
     }
   }
@@ -303,9 +327,54 @@ class _AuthScreenState extends State<AuthScreen>
   void initState() {
     setUpAnimation();
     super.initState();
+    emailAuth = new EmailAuth(
+      sessionName: "Flavour Fog",
+    );
+
+    /// Configuring the remote server
+
+    // emailAuth.config("server");
   }
 
   @override
+  void verify() {
+    bool result = emailAuth.validateOtp(
+        recipientMail: emailController1.value.text,
+        userOtp: _otpcontroller.value.text);
+    if (result) {
+      vaildation();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('OTP Code is Wrong'),
+        ),
+      );
+    }
+  }
+
+  void sendOtp() async {
+    bool result = await emailAuth.sendOtp(
+        recipientMail: emailController1.value.text, otpLength: 5);
+    if (result) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Check your Email'),
+        ),
+      );
+      // using a void function because i am using a
+      // stateful widget and seting the state from here.
+      setState(() {
+        submitValid = true;
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("We Couldn't Send the OTP"),
+        ),
+      );
+    }
+  }
+
   void dispose() {
     _animationController.dispose();
     super.dispose();
@@ -444,11 +513,13 @@ class _AuthScreenState extends State<AuthScreen>
                                   ),
                                 ),
                               ),
-                              Spacer(),
                               TextFormField(
                                 style: TextStyle(color: Colors.white),
                                 onChanged: (value) {
                                   print(value);
+                                  setState(() {
+                                    submitValid = false;
+                                  });
                                 },
                                 // obscureText: true,
                                 controller: emailController1,
@@ -494,6 +565,25 @@ class _AuthScreenState extends State<AuthScreen>
                                   ),
                                 ),
                               ),
+                              (submitValid)
+                                  ? TextFormField(
+                                      style: TextStyle(color: Colors.white),
+                                      // obscureText: true,
+                                      onChanged: (value) {
+                                        print(value);
+                                      },
+                                      controller: _otpcontroller,
+                                      decoration: const InputDecoration(
+                                        fillColor: Colors.white,
+                                        hintText: "OTP",
+                                        hintStyle: TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    )
+                                  : Container(
+                                      height: 1,
+                                    ),
                               Spacer(flex: 2),
                             ]),
                       ),
@@ -614,10 +704,16 @@ class _AuthScreenState extends State<AuthScreen>
                         onTap: () async {
                           if (_isShowSignUp) {
                             // try {
-                            try {
-                              vaildation();
-                            } catch (e) {
-                              print(e);
+
+                            if (!submitValid) {
+                              sendOtp();
+                            } else {
+                              // try {
+                              //   vaildation();
+                              // } catch (e) {
+                              //   print(e);
+                              // }
+
                             }
 
                             //   Navigator.of(context).pop();
@@ -672,7 +768,10 @@ class _AuthScreenState extends State<AuthScreen>
                               vertical: defaultPadding * 0.75),
                           width: 160,
                           //color: Colors.blue,
-                          child: Text("Sign Up".toUpperCase(),
+                          child: Text(
+                              (submitValid)
+                                  ? "Sign Up"
+                                  : "Request OTP".toUpperCase(),
                               textAlign: TextAlign.center),
                         ),
                       ),
@@ -749,4 +848,3 @@ class _AuthScreenState extends State<AuthScreen>
 //   }
 
 //   showDialogue() {}
-
