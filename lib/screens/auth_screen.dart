@@ -6,6 +6,7 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:email_auth/email_auth.dart';
+import 'package:flavor_fog/auth.config.dart';
 import 'package:flavor_fog/screens/home/home_screen.dart';
 import 'package:flavor_fog/size_config.dart';
 import 'package:flutter/material.dart';
@@ -328,12 +329,12 @@ class _AuthScreenState extends State<AuthScreen>
     setUpAnimation();
     super.initState();
     emailAuth = new EmailAuth(
-      sessionName: "Flavour Fog",
+      sessionName: "Sample Session",
     );
 
     /// Configuring the remote server
 
-    // emailAuth.config("server");
+    emailAuth.config(remoteServerConfiguration);
   }
 
   @override
@@ -708,6 +709,7 @@ class _AuthScreenState extends State<AuthScreen>
                             if (!submitValid) {
                               sendOtp();
                             } else {
+                              verify();
                               // try {
                               //   vaildation();
                               // } catch (e) {
