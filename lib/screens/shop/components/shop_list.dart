@@ -62,6 +62,8 @@ class _ShopListState extends State<ShopList> {
                             title: productDB[index]['title'],
                             price: productDB[index]['price'],
                             id: productDB[index]['id'],
+                            shop: productDB[index]['shop'],
+                            shopId: productDB[index]['shopId'],
                             images: List.from(productDB[index]['images']),
                             description: productDB[index]['desc']);
 

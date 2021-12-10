@@ -1,10 +1,14 @@
 //@dart=2.9
+import 'dart:convert';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flavor_fog/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import '../size_config.dart';
 
@@ -12,8 +16,12 @@ class CheckOut extends StatefulWidget {
   const CheckOut({
     Key key,
     this.selected,
+    this.shopId,
+    this.token,
   }) : super(key: key);
   final String selected;
+  final String shopId;
+  final String token;
   @override
   _CheckOutState createState() => _CheckOutState();
 }
@@ -22,13 +30,59 @@ final user = FirebaseAuth.instance.currentUser;
 String _uid = user.uid;
 
 class _CheckOutState extends State<CheckOut> {
+  List<String> daftar;
   String deliv = "";
   FirebaseDatabase database = FirebaseDatabase.instance;
   String _newAdd;
   int number;
   TextEditingController _addressC = TextEditingController();
-  @override
+
+  Future<Response> sendNotification(
+      List<String> tokenIdList, String contents, String heading) async {
+    return await post(
+      Uri.parse('https://onesignal.com/api/v1/notifications'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        "app_id":
+            "6c81e907-87b4-4bd4-b56c-68382ca36a11", //kAppId is the App Id that one get from the OneSignal When the application is registered.
+
+        "include_player_ids":
+            tokenIdList, //tokenIdList Is the List of All the Token Id to to Whom notification must be sent.
+
+        // android_accent_color reprsent the color of the heading text in the notifiction
+        "android_accent_color": "FF9976D2",
+
+        "small_icon": "ic_stat_onesignal_default",
+
+        "large_icon":
+            "https://www.filepicker.io/api/file/zPloHSmnQsix82nlj9Aj?filename=name.jpg",
+
+        "headings": {"en": heading},
+
+        "contents": {"en": contents},
+      }),
+    );
+  }
+
+  String tokenId;
+  _getToken() async {
+    var status = await OneSignal.shared.getDeviceState();
+    setState(() {
+      tokenId = status.userId;
+    });
+  }
+
+  String name;
   Widget build(BuildContext context) {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser.uid)
+        .get()
+        .then((DocumentSnapshot snapshot) => name = snapshot['name']);
+    daftar.fillRange(0, 0, widget.token);
+    _getToken();
     return Scaffold(
       body: StreamBuilder(
           stream: FirebaseFirestore.instance
@@ -38,9 +92,9 @@ class _CheckOutState extends State<CheckOut> {
               .where('shop', isEqualTo: widget.selected)
               .snapshots(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            }
+            // if (snapshot.connectionState == ConnectionState.waiting) {
+            //   return Center(child: CircularProgressIndicator());
+            // }
             final checkDB = snapshot.data.docs;
 
             // DocumentReference<Map<String, dynamic>> documentReference;
@@ -51,27 +105,27 @@ class _CheckOutState extends State<CheckOut> {
             //     .child("${checkDB[0]['shop']}/request/$_uid");
 
 // Get the Stream
-            Stream<DatabaseEvent> stream = ref.onValue;
-            stream.listen((DatabaseEvent event) {
-              print('Event Type: ${event.type}'); // DatabaseEventType.value;
-              print('Snapshot: ${event.snapshot}');
+            // Stream<DatabaseEvent> stream = ref.onValue;
+            // stream.listen((DatabaseEvent event) {
+            //   print('Event Type: ${event.type}'); // DatabaseEventType.value;
+            //   print('Snapshot: ${event.snapshot}');
 
-              Map<dynamic, dynamic> values = event.snapshot.value;
-              values.forEach((key, values) {
-                print(values["title"]);
-                print(values["price"]);
-                deliv = values["request"];
-              });
-            });
+            //   Map<dynamic, dynamic> values = event.snapshot.value;
+            //   values.forEach((key, values) {
+            //     print(values["title"]);
+            //     print(values["price"]);
+            //     deliv = values["request"];
+            //   });
+            // });
             return StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection('users')
                     .where('uid', isEqualTo: _uid)
                     .snapshots(),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  }
+                  // if (snapshot.connectionState == ConnectionState.waiting) {
+                  //   return Center(child: CircularProgressIndicator());
+                  // }
                   final checkDB1 = snapshot.data.docs;
 
                   return Container(
@@ -298,21 +352,23 @@ class _CheckOutState extends State<CheckOut> {
                         ),
                         TextButton(
                             onPressed: () async {
-                              for (var i = 0; i < checkDB.length; i++) {
-                                await FirebaseDatabase(
-                                        databaseURL:
-                                            "https://flavour-fog-default-rtdb.asia-southeast1.firebasedatabase.app")
-                                    // .instance
-                                    .ref(
-                                        "${checkDB[0]['shop']}/request/$_uid/${checkDB[i]['title']}")
-                                    .set({
-                                  "request": "waiting",
-                                  "id": checkDB[i]['productId'],
-                                  "title": checkDB[i]['title'],
-                                  "price": checkDB[i]['price'],
-                                  "number": checkDB[i]['total'],
-                                });
-                              }
+                              // for (var i = 0; i < checkDB.length; i++) {
+                              //   await FirebaseFirestore.instance
+                              //       .collection('request')
+                              //       .doc(widget.shopId)
+                              //       .collection(widget.selected)
+                              //       .doc(checkDB[i]['title'])
+                              //       .set({
+                              //     "request": "waiting",
+                              //     "id": checkDB[i]['productId'],
+                              //     "title": checkDB[i]['title'],
+                              //     "price": checkDB[i]['price'],
+                              //     "number": checkDB[i]['total'],
+                              //     "shop": widget.selected,
+                              //     "token": tokenId,
+                              //     "shopId": widget.shopId,
+                              //   });
+                              sendNotification(daftar, "Test 1", "test");
                             },
                             child: Center(child: Text('Submit Order')))
                       ],

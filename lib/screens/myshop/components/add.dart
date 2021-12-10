@@ -20,8 +20,10 @@ import 'package:path/path.dart' as Path;
 
 class AddProduct extends StatefulWidget {
   final String shop;
+  final String token;
   final String shopId;
-  const AddProduct({Key key, this.shop, this.shopId}) : super(key: key);
+  const AddProduct({Key key, this.shop, this.shopId, this.token})
+      : super(key: key);
 
   @override
   _AddProductState createState() => _AddProductState();
@@ -275,6 +277,7 @@ class _AddProductState extends State<AddProduct> {
         'desc': _descController.text,
         'shopId': widget.shopId,
         'shop': widget.shop,
+        'shopToken': widget.token,
       });
       FirebaseFirestore.instance.collection('products').doc(docRef.id).update({
         'id': docRef.id,

@@ -15,7 +15,7 @@ import 'product_description.dart';
 import 'top_rounded_container.dart';
 import 'product_images.dart';
 
-class Body extends StatelessWidget {
+class Body extends StatefulWidget {
   final Product product;
   final String id;
   final String title, description;
@@ -43,31 +43,46 @@ class Body extends StatelessWidget {
       : super(key: key);
 
   @override
+  State<Body> createState() => _BodyState();
+}
+
+class _BodyState extends State<Body> {
 //   State<Body> createState() => _BodyState();
 // }
 
 // class _BodyState extends State<Body> {
-  @override
-  String _item = '1';
 
+  String _item = '1';
+  late String _token;
   int _item1 = 1;
+  @override
+  void initState() {
+    super.initState();
+    FirebaseFirestore.instance
+        .collection('shops')
+        .doc(widget.shopId)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      _token = documentSnapshot['token'];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    print(shop);
+    print(widget.shop);
     return ListView(
       children: [
         ProductImages(
-          images: images,
+          images: widget.images,
         ),
         TopRoundedContainer(
           color: Colors.white,
           child: Column(
             children: [
               ProductDescription(
-                title: title,
-                price: price,
-                description: description,
+                title: widget.title,
+                price: widget.price,
+                description: widget.description,
                 pressOnSeeMore: () {},
               ),
               TopRoundedContainer(
@@ -173,8 +188,8 @@ class Body extends StatelessWidget {
                                                           .collection('users')
                                                           .doc(user!.uid)
                                                           .collection('cart')
-                                                          .doc(
-                                                              id) // varuId in your case
+                                                          .doc(widget
+                                                              .id) // varuId in your case
                                                           .get();
 
                                                   if (snapShot == null ||
@@ -185,16 +200,17 @@ class Body extends StatelessWidget {
                                                         .collection('users')
                                                         .doc(user.uid)
                                                         .collection('cart')
-                                                        .doc(id)
+                                                        .doc(widget.id)
                                                         .set({
-                                                      'productId': id,
-                                                      'shop': shop,
-                                                      'shopId': shopId,
+                                                      'productId': widget.id,
+                                                      'shop': widget.shop,
+                                                      'shopId': widget.shopId,
                                                       'total': _item1,
-                                                      'title': title,
-                                                      'price': price,
-                                                      'image':
-                                                          images[0].toString()
+                                                      'title': widget.title,
+                                                      'price': widget.price,
+                                                      'shopToken': _token,
+                                                      'image': widget.images[0]
+                                                          .toString()
                                                     });
                                                     Navigator.pop(context);
                                                   } else {
@@ -204,7 +220,7 @@ class Body extends StatelessWidget {
                                                         .collection('users')
                                                         .doc(user.uid)
                                                         .collection('cart')
-                                                        .doc(id)
+                                                        .doc(widget.id)
                                                         .update({
                                                       'total':
                                                           _item1 + itemCount,
@@ -236,7 +252,8 @@ class Body extends StatelessWidget {
                                             ElevatedButton(
                                               onPressed: () {
                                                 pushNewScreen(context,
-                                                    screen: tempRating(id: id),
+                                                    screen: tempRating(
+                                                        id: widget.id),
                                                     pageTransitionAnimation:
                                                         PageTransitionAnimation
                                                             .slideUp);

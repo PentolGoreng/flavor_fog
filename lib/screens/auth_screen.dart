@@ -53,7 +53,7 @@ class _AuthScreenState extends State<AuthScreen>
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController password = TextEditingController();
   final TextEditingController _otpcontroller = TextEditingController();
-  bool submitValid = false;
+  bool submitValid = true;
   // final scaffoldKey = GlobalKey<ScaffoldState>();
   // BuildContext context;
   // AppMethods appMethods = Auth as AppMethods;
@@ -329,7 +329,7 @@ class _AuthScreenState extends State<AuthScreen>
     setUpAnimation();
     super.initState();
     emailAuth = new EmailAuth(
-      sessionName: "Sample Session",
+      sessionName: "Flavour Fog OTP",
     );
 
     /// Configuring the remote server
@@ -354,25 +354,94 @@ class _AuthScreenState extends State<AuthScreen>
   }
 
   void sendOtp() async {
-    bool result = await emailAuth.sendOtp(
-        recipientMail: emailController1.value.text, otpLength: 5);
-    if (result) {
+    if (emailController1.text.isEmpty &&
+        passwordController1.text.isEmpty &&
+        name.text.isEmpty &&
+        passwordController2.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Check your Email'),
+          content: Text('All Flied Are Empty'),
         ),
       );
-      // using a void function because i am using a
-      // stateful widget and seting the state from here.
-      setState(() {
-        submitValid = true;
-      });
+    } else if (emailController1.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Email Is Empty'),
+        ),
+      );
+    } else if (passwordController2.text.isEmpty ||
+        passwordController2.text != passwordController1.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Confirm Password Should Be The Same'),
+        ),
+      );
+    } else if (!regExp.hasMatch(emailController1.text)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please Try Vaild Email'),
+        ),
+      );
+    } else if (RegExp(r"\s\b|\b\s").hasMatch(name.text) ||
+        !RegExp(r'^[a-zA-Z0-9_\.]+$').hasMatch(name.text)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Only Use AplhaNumeric And (-, _, .) And No Spaces'),
+        ),
+      );
+    } else if (RegExp(r"\s\b|\b\s").hasMatch(passwordController1.text) ||
+        !RegExp(r'^[a-zA-Z0-9_\.]+$').hasMatch(passwordController1.text)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Only Use AplhaNumeric And (-, _, .) And No Spaces'),
+        ),
+      );
+    } else if (RegExp(r"\s\b|\b\s").hasMatch(passwordController2.text) ||
+        !RegExp(r'^[a-zA-Z0-9_\.]+$').hasMatch(passwordController2.text)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Only Use AplhaNumeric And (-, _, .) And No Spaces'),
+        ),
+      );
+    } else if (passwordController1.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Password Is Empty'),
+        ),
+      );
+    } else if (name.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please Set Username'),
+        ),
+      );
+    } else if (passwordController1.text.length < 8) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Password  Is Too Short'),
+        ),
+      );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("We Couldn't Send the OTP"),
-        ),
-      );
+      bool result = await emailAuth.sendOtp(
+          recipientMail: emailController1.value.text, otpLength: 5);
+      if (result) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Check your Email'),
+          ),
+        );
+        // using a void function because i am using a
+        // stateful widget and seting the state from here.
+        setState(() {
+          submitValid = true;
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("We Couldn't Send the OTP"),
+          ),
+        );
+      }
     }
   }
 
@@ -705,7 +774,7 @@ class _AuthScreenState extends State<AuthScreen>
                         onTap: () async {
                           if (_isShowSignUp) {
                             // try {
-
+                            submitValid;
                             if (!submitValid) {
                               sendOtp();
                             } else {
@@ -736,6 +805,7 @@ class _AuthScreenState extends State<AuthScreen>
 
                           } else {
                             updateView();
+                            !submitValid;
                           }
                           // },
                           //   if (_isShowSignUp) {

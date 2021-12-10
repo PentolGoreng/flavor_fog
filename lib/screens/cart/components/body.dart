@@ -21,6 +21,7 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
+  String token;
   final _uid = FirebaseAuth.instance.currentUser;
   _modal() {
     showModalBottomSheet(
@@ -321,6 +322,8 @@ class _BodyState extends State<Body> {
                               ? setState(
                                   () {
                                     selected = cartDB[index]['shop'];
+                                    shopId = cartDB[index]['shopId'];
+                                    token = cartDB[index]['shopToken'];
                                   },
                                 )
                               : setState(
@@ -367,7 +370,11 @@ class _BodyState extends State<Body> {
                                 content: Text(
                                     'Please select the shop for the transaction')))
                         : pushNewScreen(context,
-                            screen: CheckOut(selected: selected));
+                            screen: CheckOut(
+                              selected: selected,
+                              shopId: shopId,
+                              token: token,
+                            ));
                   },
                 )
               ],

@@ -5,10 +5,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flavor_fog/constants.dart';
+import 'package:flavor_fog/screens/home/components/icon_btn_with_counter.dart';
 import 'package:flavor_fog/screens/myshop/components/add.dart';
 import 'package:flavor_fog/screens/myshop/components/addPressed.dart';
 import 'package:flavor_fog/screens/myshop/components/desc.dart';
 import 'package:flavor_fog/screens/myshop/components/myshop_list.dart';
+import 'package:flavor_fog/screens/myshop/components/requests.dart';
 import 'package:flavor_fog/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,8 +23,9 @@ import 'package:path/path.dart' as Path;
 import 'shop_pic.dart';
 
 class Body extends StatefulWidget {
-  Body({this.shopId});
+  Body({this.shopId, this.token});
   final String shopId;
+  final String token;
 
   @override
   State<Body> createState() => _BodyState();
@@ -101,44 +104,64 @@ class _BodyState extends State<Body> {
     return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('shops')
-            .where('${widget.shopId}}')
+            .where('shopId', isEqualTo: widget.shopId)
             .snapshots(),
         builder: (context, snapshot) {
           final dataShop = snapshot.data.docs;
           _shop = dataShop[0]['title'];
           return Scaffold(
-            body: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(
-                    vertical: getProportionateScreenHeight(50)),
-                child: Column(children: [
-                  Center(child: MyShopPic(shopId: widget.shopId)),
-                  SizedBox(height: 50),
-                  DescScreen(
-                    shopId: widget.shopId,
-                  ),
-                  MyShopList(shopId: widget.shopId),
-                  SizedBox(
-                    height: kBottomNavigationBarHeight,
-                  )
-                ])),
-            floatingActionButton: FloatingActionButton(
-              backgroundColor: Theme.of(context).primaryColor,
-              onPressed: () {
-                pushNewScreen(context,
-                    screen: AddProduct(
-                      shop: _shop,
+              body: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(
+                      vertical: getProportionateScreenHeight(50)),
+                  child: Column(children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconBtnWithCounter(
+                          svgSrc: "assets/icons/Bell.svg",
+                          numOfitem: 3,
+                          press: () {
+                            Navigator.of(context, rootNavigator: true).push(
+                              MaterialPageRoute(
+                                builder: (BuildContext context) {
+                                  return Requests(
+                                    shopId: widget.shopId,
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                    Center(child: MyShopPic(shopId: widget.shopId)),
+                    SizedBox(height: 50),
+                    DescScreen(
                       shopId: widget.shopId,
-                    ));
-                // _showDialog(context);
-              },
-              child: Icon(
-                Icons.add,
+                    ),
+                    MyShopList(shopId: widget.shopId),
+                    SizedBox(
+                      height: kBottomNavigationBarHeight,
+                    )
+                  ])),
+              floatingActionButton: FloatingActionButton(
+                backgroundColor: Theme.of(context).primaryColor,
+                onPressed: () {
+                  pushNewScreen(context,
+                      screen: AddProduct(
+                        token: widget.token,
+                        shop: _shop,
+                        shopId: widget.shopId,
+                      ));
+                  // _showDialog(context);
+                },
+                child: Icon(
+                  Icons.add,
+                ),
               ),
-            ),
-            bottomSheet: SizedBox(
-              height: kBottomNavigationBarHeight * 2,
-            ),
-          );
+              bottomSheet: SizedBox(
+                height: kBottomNavigationBarHeight * 2,
+              ));
         });
   }
 

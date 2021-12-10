@@ -11,6 +11,7 @@ import 'package:flavor_fog/screens/myshop/myshop_screen.dart';
 import 'package:flavor_fog/temprating.dart';
 import 'package:flutter/material.dart';
 import 'package:flavor_fog/screens/auth_screen.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'profile_menu.dart';
@@ -31,23 +32,11 @@ class _BodyState extends State<Body> {
       app: FirebaseFirestore.instance.app,
       bucket: 'gs://my-project.appspot.com');
 
-  Uint8List imageBytes;
   String errorMsg;
 
   _BodyState() {
     final user = FirebaseAuth.instance.currentUser;
     final uid = user.uid;
-
-    storage
-        .ref()
-        .child('Profile/${uid}.png')
-        .getData(10000000)
-        .then((data) => setState(() {
-              imageBytes = data;
-            }))
-        .catchError((e) => setState(() {
-              errorMsg = e.error;
-            }));
   }
   var _newShop = '';
   var _newShop1 = '';
@@ -65,8 +54,9 @@ class _BodyState extends State<Body> {
       'address': addrController.text,
       'creationTime': Timestamp.now(),
       'shopId': '',
-      'shop': '',
+      // 'shop': '',
       'userId': user.uid,
+      'token': _tokenId,
       'image':
           'https://firebasestorage.googleapis.com/v0/b/flavour-fog.appspot.com/o/Profile%2Fprofile.jpg?alt=media&token=ddf7ce8f-70b7-40c9-beaf-e4fb8688c6d8'
       // 'shopImage': shopData['image'],
@@ -85,8 +75,18 @@ class _BodyState extends State<Body> {
 
   TextEditingController shopController = TextEditingController();
   TextEditingController addrController = TextEditingController();
+  String _tokenId;
+  @override
+  void _getData() async {
+    var status = await OneSignal.shared.getDeviceState();
+    setState(() {
+      _tokenId = status.userId;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    _getData();
     return SingleChildScrollView(
         padding: EdgeInsets.symmetric(vertical: 20),
         child: Column(children: [
@@ -108,16 +108,17 @@ class _BodyState extends State<Body> {
           //   icon: "assets/icons/Bell.svg",
           //   press: () => {},
           // ),
-          ProfileMenu(
-            color: Color(0xFF212121),
-            text: "Settings",
-            icon: "assets/icons/Settings.svg",
-            press: () {},
-          ),
+
           ProfileMenu(
             color: Color(0xFF212121),
             text: "Help Center",
             icon: "assets/icons/Question mark.svg",
+            press: () {},
+          ),
+          ProfileMenu(
+            color: Color(0xFF212121),
+            text: "Shop Orders",
+            icon: "assets/icons/Mail.svg",
             press: () {},
           ),
           ProfileMenu(
@@ -164,9 +165,12 @@ class _BodyState extends State<Body> {
                           // print('Document data: ${documentSnapshot.data()}' +
                           //     'a');
                           String shopId = shopDoc["shopId"];
+                          String name = shopDoc["name"];
                           pushNewScreen(context,
                               screen: MyShopScreen(
+                                token: _tokenId,
                                 shopId: shopId,
+                                name: name,
                               ));
                         });
                       } else if (!shopDoc.data().containsValue("hasShop")) {

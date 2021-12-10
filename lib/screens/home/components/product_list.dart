@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flavor_fog/screens/cart/cart_screen.dart';
 import 'package:flavor_fog/screens/home/components/icon_btn_with_counter.dart';
+import 'package:flavor_fog/screens/myshop/components/requests.dart';
 import 'package:flutter/foundation.dart';
 //@dart=2.9
 import 'package:flutter/material.dart';
@@ -38,38 +39,6 @@ class _ProductListState extends State<ProductList>
   String search;
   int currentPage;
   final PageController controller = PageController();
-  List<Widget> _buildScreens() {
-    return [
-      ListProduct(
-        menuScreenContext: widget.menuScreenContext,
-      ),
-      ListShop(menuScreenContext: widget.menuScreenContext)
-    ];
-  }
-
-  List<PersistentBottomNavBarItem> _navBarsItems() {
-    return [
-      PersistentBottomNavBarItem(
-        icon: Icon(Icons.home),
-        title: "Products",
-        activeColorPrimary: kPrimaryColor,
-        inactiveColorPrimary: Colors.grey,
-        inactiveColorSecondary: Colors.purple,
-        routeAndNavigatorSettings: RouteAndNavigatorSettings(
-          initialRoute: "/",
-        ),
-      ),
-      PersistentBottomNavBarItem(
-        icon: Icon(Icons.radio),
-        title: ("Shops"),
-        activeColorPrimary: kPrimaryColor,
-        inactiveColorPrimary: Colors.grey,
-        routeAndNavigatorSettings: RouteAndNavigatorSettings(
-          initialRoute: '/',
-        ),
-      ),
-    ];
-  }
 
   @override
   bool get wantKeepAlive => true;
