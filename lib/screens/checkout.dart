@@ -30,7 +30,7 @@ final user = FirebaseAuth.instance.currentUser;
 String _uid = user.uid;
 
 class _CheckOutState extends State<CheckOut> {
-  List<String> daftar;
+  List<String> daftar = [];
   String deliv = "";
   FirebaseDatabase database = FirebaseDatabase.instance;
   String _newAdd;
@@ -74,15 +74,82 @@ class _CheckOutState extends State<CheckOut> {
     });
   }
 
+  String owner;
   String name;
-  Widget build(BuildContext context) {
+  void getDataName() async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser.uid)
+        .get()
+        .then((DocumentSnapshot snapshot) => setState(() {
+              name = snapshot['name'];
+            }));
+    final shopDoc = await FirebaseFirestore.instance
+        .collection('shops')
+        .doc(widget.shopId)
+        .get();
+    await setState(() {
+      owner = shopDoc['userId'];
+    });
+    final shopDoc1 =
+        await FirebaseFirestore.instance.collection('users').doc(owner).get();
+    await setState(() {
+      owner = shopDoc['userId'];
+      daftar.insert(0, shopDoc1['token']);
+    });
+    // await FirebaseFirestore.instance
+    //     .collection('shops')
+    //     .doc(widget.shopId)
+    //     .get()
+    //     .then((DocumentSnapshot snapshot) {
+    //   FirebaseFirestore.instance
+    //       .collection('users')
+    //       .doc(snapshot['userId'])
+    //       .get()
+    //       .then(
+    //         (DocumentSnapshot snapshot) => setState(() {
+    //           daftar.insert(0, snapshot['token']);
+    //         }),
+    //       );
+    // });
+  }
+
+  send() async {
+    await getDataName();
+    await OneSignal.shared.postNotification(OSCreateNotification(
+        playerIds: daftar,
+        content: "this is a test from OneSignal's Flutter SDK",
+        heading: "Test Notification",
+        buttons: [
+          OSActionButton(text: "test1", id: "id1"),
+          OSActionButton(text: "test2", id: "id2")
+        ]));
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
     FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser.uid)
         .get()
-        .then((DocumentSnapshot snapshot) => name = snapshot['name']);
-    daftar.fillRange(0, 0, widget.token);
-    _getToken();
+        .then((DocumentSnapshot snapshot) => setState(() {
+              name = snapshot['name'];
+            }));
+    FirebaseFirestore.instance
+        .collection('shops')
+        .doc(widget.shopId)
+        .get()
+        .then((DocumentSnapshot snapshot) => setState(() {
+              daftar.insert(0, snapshot['token']);
+            }));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // _getToken();
     return Scaffold(
       body: StreamBuilder(
           stream: FirebaseFirestore.instance
@@ -98,8 +165,7 @@ class _CheckOutState extends State<CheckOut> {
             final checkDB = snapshot.data.docs;
 
             // DocumentReference<Map<String, dynamic>> documentReference;
-            DatabaseReference ref = FirebaseDatabase.instance
-                .ref("${checkDB[0]['shop']}/request/$_uid");
+
             // FirebaseDatabase.instance
             //     .ref()
             //     .child("${checkDB[0]['shop']}/request/$_uid");
@@ -352,23 +418,34 @@ class _CheckOutState extends State<CheckOut> {
                         ),
                         TextButton(
                             onPressed: () async {
-                              // for (var i = 0; i < checkDB.length; i++) {
-                              //   await FirebaseFirestore.instance
-                              //       .collection('request')
-                              //       .doc(widget.shopId)
-                              //       .collection(widget.selected)
-                              //       .doc(checkDB[i]['title'])
-                              //       .set({
-                              //     "request": "waiting",
-                              //     "id": checkDB[i]['productId'],
-                              //     "title": checkDB[i]['title'],
-                              //     "price": checkDB[i]['price'],
-                              //     "number": checkDB[i]['total'],
-                              //     "shop": widget.selected,
-                              //     "token": tokenId,
-                              //     "shopId": widget.shopId,
-                              //   });
-                              sendNotification(daftar, "Test 1", "test");
+                              await _getToken();
+                              await FirebaseFirestore.instance
+                                  .collection('request')
+                                  .doc(widget.shopId)
+                                  .set({'shop': widget.selected});
+                              for (var i = 0; i < checkDB.length; i++) {
+                                await FirebaseFirestore.instance
+                                    .collection('request')
+                                    .doc(widget.shopId)
+                                    .collection(_uid)
+                                    .doc(checkDB[i]['title'])
+                                    .set({
+                                  "request": "waiting",
+                                  "id": checkDB[i]['productId'],
+                                  "title": checkDB[i]['title'],
+                                  "price": checkDB[i]['price'],
+                                  "number": checkDB[i]['total'],
+                                  "shop": widget.selected,
+                                  "token": tokenId,
+                                  "shopId": widget.shopId,
+                                  "uid": _uid,
+                                });
+                              }
+                              // await getDataName();
+                              // sendNotification(daftar, "Test 1", "test");
+                              await send();
+                              daftar.clear;
+                              print(daftar);
                             },
                             child: Center(child: Text('Submit Order')))
                       ],

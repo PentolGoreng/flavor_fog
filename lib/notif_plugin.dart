@@ -21,24 +21,27 @@ class NotifPlugin {
 
     FirebaseMessaging.onMessage.listen(
       (RemoteMessage message) async {
-        print('onMessage : $message');
+        // print('onMessage : $message');
+        _navigate(message);
       },
     );
     FirebaseMessaging.onMessageOpenedApp.listen(
       (RemoteMessage message) async {
-        print('onLaunch : $message');
+        // print('onLaunch : $message');
+        _navigate(message);
       },
     );
   }
 
-  void _navigate(Map<String, dynamic> message) {
-    var notifData = message['data'];
-    var view = notifData['view'];
+  void _navigate(RemoteMessage message) {
+    var notifData = message;
+    // var view = notifData['view'];
 
-    if (view != null) {
-      if (view == "request") {
-        navigatorKey.currentState!.pushNamed("/request");
-      }
+    if (message != null) {
+      // if (view == "request") {
+      //   navigatorKey.currentState!.pushNamed("/request");
+      // }
+      print(' ini pesan MESSAGE ${message}');
     }
   }
 }

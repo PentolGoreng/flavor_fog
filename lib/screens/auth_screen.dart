@@ -11,6 +11,7 @@ import 'package:flavor_fog/screens/home/home_screen.dart';
 import 'package:flavor_fog/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
@@ -35,6 +36,8 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen>
     with SingleTickerProviderStateMixin {
+  final Cuser = FirebaseAuth.instance.currentUser;
+
   AnimationController _animationController;
   Animation<double> _animationTextRotate;
   TextEditingController emailController = TextEditingController();
@@ -59,7 +62,11 @@ class _AuthScreenState extends State<AuthScreen>
   // AppMethods appMethods = Auth as AppMethods;
   _AuthScreenState();
 
-  void inputData1() {
+  void inputData1() async {
+    var status = await OneSignal.shared.getDeviceState();
+    setState(() {
+      _tokenId = status.userId;
+    });
     setState(() {
       final Cuser = FirebaseAuth.instance.currentUser;
       final uid = Cuser.uid;
@@ -69,20 +76,45 @@ class _AuthScreenState extends State<AuthScreen>
         'email': emailController1.text,
         'uid': uid,
         'address': '',
+        "token": _tokenId,
         'image':
             'https://firebasestorage.googleapis.com/v0/b/flavour-fog.appspot.com/o/Profile%2Fprofile.jpg?alt=media&token=ddf7ce8f-70b7-40c9-beaf-e4fb8688c6d8',
       }).catchError((error) => print('Add failed: $error'));
-      ;
     });
   }
 
-  void inputData() {
+  void inputData() async {
+    var status = await OneSignal.shared.getDeviceState();
     setState(() {
-      final user = FirebaseAuth.instance.currentUser;
-      final uid = user.uid;
+      _tokenId = status.userId;
     });
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser.uid) // <-- Document ID
+        .update({
+      "token": _tokenId,
+    }).catchError((error) => print('Add failed: $error'));
 
-    // here you write the codes to input the data into firestore
+    final shopDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser.uid)
+        .get();
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser.uid)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (shopDoc.data().containsValue("hasShop")) {
+        FirebaseFirestore.instance
+            .collection('shop')
+            .doc(shopDoc['shopId'])
+            .update({
+          "token": _tokenId,
+        }).catchError((error) => print('Add failed: $error'));
+      }
+      // here you write the codes to input the data into firestore
+    });
   }
 
   // final User user = FirebaseAuth.instance.currentUser;
@@ -172,6 +204,8 @@ class _AuthScreenState extends State<AuthScreen>
       try {
         await widget._auth.signInWithEmailAndPassword(
             email: email.text, password: password.text);
+
+        await inputData();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Login SuccesFul'),
@@ -314,6 +348,7 @@ class _AuthScreenState extends State<AuthScreen>
   }
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  String _tokenId;
 
   void updateView() {
     setState(() {
@@ -452,6 +487,13 @@ class _AuthScreenState extends State<AuthScreen>
 
   bool _isShowSignUp = false;
   @override
+  void _getData() async {
+    var status = await OneSignal.shared.getDeviceState();
+    setState(() {
+      _tokenId = status.userId;
+    });
+  }
+
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     // LoginService loginService =

@@ -41,6 +41,8 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     configOneSignel();
+    OneSignal.shared.setExternalUserId(user.uid);
+    OneSignal.shared.disablePush(false);
   }
 
   void configOneSignel() {
@@ -75,9 +77,11 @@ class _MyAppState extends State<MyApp> {
       // home: SplashScreen(),
       // We use routeName so that we dont need to remember the name
       // initialRoute: _user(),
-      home: user != null
-          ? ProvidedStylesExample(menuScreenContext: context)
-          : AuthScreen(),
+      home:
+          // user != null
+          // ? ProvidedStylesExample(menuScreenContext: context)
+          // :
+          AuthScreen(),
       routes: routes,
     );
   }

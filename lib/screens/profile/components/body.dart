@@ -126,6 +126,7 @@ class _BodyState extends State<Body> {
             text: "Log Out",
             icon: "assets/icons/Log out.svg",
             press: () {
+              OneSignal.shared.disablePush(true);
               FirebaseAuth.instance.signOut();
               Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
                 MaterialPageRoute(
