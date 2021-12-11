@@ -67,6 +67,7 @@ dependencies:
   email_auth: ^1.0.0
   onesignal_flutter: ^3.2.7
   http: ^0.13.4
+  timeago: ^3.1.0
   
   
   # google_fonts: ^2.1.0

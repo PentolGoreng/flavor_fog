@@ -77,13 +77,14 @@ class _CheckOutState extends State<CheckOut> {
   String owner;
   String name;
   void getDataName() async {
-    await FirebaseFirestore.instance
+    final nameDoc = await FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser.uid)
-        .get()
-        .then((DocumentSnapshot snapshot) => setState(() {
-              name = snapshot['name'];
-            }));
+        .get();
+    await setState(() {
+      name = nameDoc['name'];
+    });
+
     final shopDoc = await FirebaseFirestore.instance
         .collection('shops')
         .doc(widget.shopId)
@@ -425,11 +426,10 @@ class _CheckOutState extends State<CheckOut> {
                                   .set({'shop': widget.selected});
                               for (var i = 0; i < checkDB.length; i++) {
                                 await FirebaseFirestore.instance
-                                    .collection('request')
+                                    .collection('shops')
                                     .doc(widget.shopId)
-                                    .collection(_uid)
-                                    .doc(checkDB[i]['title'])
-                                    .set({
+                                    .collection('request')
+                                    .add({
                                   "request": "waiting",
                                   "id": checkDB[i]['productId'],
                                   "title": checkDB[i]['title'],
@@ -439,6 +439,8 @@ class _CheckOutState extends State<CheckOut> {
                                   "token": tokenId,
                                   "shopId": widget.shopId,
                                   "uid": _uid,
+                                  "time": Timestamp.now(),
+                                  "name": name,
                                 });
                               }
                               // await getDataName();
