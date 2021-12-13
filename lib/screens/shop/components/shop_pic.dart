@@ -34,11 +34,18 @@ class _ShopPicState extends State<ShopPic> {
             width: 115,
             child:
                 Stack(fit: StackFit.expand, clipBehavior: Clip.none, children: [
-              CircleAvatar(
-                child: ClipOval(
-                  child: Image.network('${widget.images}'),
-                ),
-              ),
+              Container(
+                  height: 80,
+                  width: 80,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: NetworkImage(
+                        '${widget.images}',
+                      ),
+                      fit: BoxFit.cover,
+                    ),
+                  )),
               // Positioned(
               //   right: -16,
               //   bottom: 0,

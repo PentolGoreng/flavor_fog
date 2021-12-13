@@ -77,6 +77,7 @@ class _CheckOutState extends State<CheckOut> {
   String owner;
   String name;
   void getDataName() async {
+    daftar.clear();
     final nameDoc = await FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser.uid)
@@ -98,9 +99,9 @@ class _CheckOutState extends State<CheckOut> {
       owner = shopDoc['userId'];
       daftar.insert(0, shopDoc1['token']);
     });
-    // await FirebaseFirestore.instance
+    // FirebaseFirestore.instance
     //     .collection('shops')
-    //     .doc(widget.shopId)
+    //     .doc(owner)
     //     .get()
     //     .then((DocumentSnapshot snapshot) {
     //   FirebaseFirestore.instance
@@ -117,14 +118,20 @@ class _CheckOutState extends State<CheckOut> {
 
   send() async {
     await getDataName();
+    _getToken();
     await OneSignal.shared.postNotification(OSCreateNotification(
-        playerIds: daftar,
-        content: "this is a test from OneSignal's Flutter SDK",
-        heading: "Test Notification",
-        buttons: [
-          OSActionButton(text: "test1", id: "id1"),
-          OSActionButton(text: "test2", id: "id2")
-        ]));
+      playerIds: daftar,
+      content: tokenId,
+      additionalData: {
+        "token": tokenId,
+        "name": name,
+      },
+      heading: "Booking Request From",
+      // buttons: [
+      //   OSActionButton(text: "test1", id: "id1"),
+      //   OSActionButton(text: "test2", id: "id2")
+      // ],
+    ));
   }
 
   @override
@@ -160,9 +167,9 @@ class _CheckOutState extends State<CheckOut> {
               .where('shop', isEqualTo: widget.selected)
               .snapshots(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
-            // if (snapshot.connectionState == ConnectionState.waiting) {
-            //   return Center(child: CircularProgressIndicator());
-            // }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
             final checkDB = snapshot.data.docs;
 
             // DocumentReference<Map<String, dynamic>> documentReference;
@@ -190,9 +197,9 @@ class _CheckOutState extends State<CheckOut> {
                     .where('uid', isEqualTo: _uid)
                     .snapshots(),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  // if (snapshot.connectionState == ConnectionState.waiting) {
-                  //   return Center(child: CircularProgressIndicator());
-                  // }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
                   final checkDB1 = snapshot.data.docs;
 
                   return Container(
@@ -420,10 +427,10 @@ class _CheckOutState extends State<CheckOut> {
                         TextButton(
                             onPressed: () async {
                               await _getToken();
-                              await FirebaseFirestore.instance
-                                  .collection('request')
-                                  .doc(widget.shopId)
-                                  .set({'shop': widget.selected});
+                              // await FirebaseFirestore.instance
+                              //     .collection('request')
+                              //     .doc(widget.shopId)
+                              //     .set({'shop': widget.selected});
                               for (var i = 0; i < checkDB.length; i++) {
                                 await FirebaseFirestore.instance
                                     .collection('shops')
@@ -447,6 +454,7 @@ class _CheckOutState extends State<CheckOut> {
                               // sendNotification(daftar, "Test 1", "test");
                               await send();
                               daftar.clear;
+
                               print(daftar);
                             },
                             child: Center(child: Text('Submit Order')))

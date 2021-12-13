@@ -107,6 +107,9 @@ class _BodyState extends State<Body> {
             .where('shopId', isEqualTo: widget.shopId)
             .snapshots(),
         builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
           final dataShop = snapshot.data.docs;
           _shop = dataShop[0]['title'];
           return Scaffold(

@@ -8,6 +8,7 @@ import 'package:flavor_fog/constants.dart';
 import 'package:flavor_fog/models/ChatMessage.dart';
 import 'package:flavor_fog/screens/account/account_screen.dart';
 import 'package:flavor_fog/screens/myshop/myshop_screen.dart';
+import 'package:flavor_fog/size_config.dart';
 import 'package:flavor_fog/temprating.dart';
 import 'package:flutter/material.dart';
 import 'package:flavor_fog/screens/auth_screen.dart';
@@ -126,7 +127,7 @@ class _BodyState extends State<Body> {
             text: "Log Out",
             icon: "assets/icons/Log out.svg",
             press: () {
-              OneSignal.shared.disablePush(true);
+              OneSignal.shared.disablePush(false);
               FirebaseAuth.instance.signOut();
               Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
                 MaterialPageRoute(
@@ -210,10 +211,12 @@ class _BodyState extends State<Body> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Center(
-                  child: Text(
-                    'Create your own Shop',
-                    style: TextStyle(fontSize: 20),
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      'Create your own Shop',
+                      style: TextStyle(fontSize: 20),
+                    ),
                   ),
                 ),
                 Spacer(),

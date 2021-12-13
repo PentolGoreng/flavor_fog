@@ -22,7 +22,11 @@ import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 class ProvidedStylesExample extends StatefulWidget {
   final BuildContext menuScreenContext;
-  ProvidedStylesExample({Key key, this.menuScreenContext}) : super(key: key);
+  final String name;
+  final String shopId;
+  ProvidedStylesExample(
+      {Key key, this.menuScreenContext, this.name, this.shopId})
+      : super(key: key);
 
   @override
   _ProvidedStylesExampleState createState() => _ProvidedStylesExampleState();
@@ -43,6 +47,8 @@ class _ProvidedStylesExampleState extends State<ProvidedStylesExample> {
     return [
       HomeScreen(
         menuScreenContext: widget.menuScreenContext,
+        name: widget.name,
+        shopId: widget.shopId,
         hideStatus: _hideNavBar,
         onScreenHideButtonPressed: () {
           setState(() {

@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flavor_fog/size_config.dart';
 import 'package:flavor_fog/constants.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-import 'package:timeago/timeago.dart';
 
 class Requests extends StatefulWidget {
   final GlobalKey<NavigatorState> navigatorKey;

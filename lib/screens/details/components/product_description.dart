@@ -1,5 +1,6 @@
 //@dart=2.9
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,8 @@ class ProductDescription extends StatelessWidget {
     this.price,
     this.isFavourite,
     this.isPopular,
+    this.shop,
+    this.shopId,
   }) : super(key: key);
   final String id;
   final String title, description;
@@ -33,6 +36,8 @@ class ProductDescription extends StatelessWidget {
   final String price;
   final bool isFavourite, isPopular;
   final Product product;
+  final String shop;
+  final String shopId;
   final GestureTapCallback pressOnSeeMore;
 
   @override

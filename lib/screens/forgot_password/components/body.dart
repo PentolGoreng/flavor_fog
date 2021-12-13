@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flavor_fog/components/custom_surfix_icon.dart';
 import 'package:flavor_fog/components/default_button.dart';
@@ -23,7 +24,7 @@ class Body extends StatelessWidget {
                 "Forgot Password",
                 style: TextStyle(
                   fontSize: getProportionateScreenWidth(28),
-                  color: Colors.black,
+                  color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -50,6 +51,13 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
   final _formKey = GlobalKey<FormState>();
   List<String> errors = [];
   String? email;
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  @override
+  Future<void> resetPassword(String email) async {
+    await _firebaseAuth.sendPasswordResetEmail(email: email);
+  }
+
+  TextEditingController controlEmail = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -58,6 +66,7 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
         children: [
           TextFormField(
             keyboardType: TextInputType.emailAddress,
+            controller: controlEmail,
             onSaved: (newValue) => email = newValue,
             onChanged: (value) {
               if (value.isNotEmpty && errors.contains(kEmailNullError)) {
@@ -101,12 +110,13 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
             text: "Continue",
             press: () {
               if (_formKey.currentState!.validate()) {
-                // Do what you want to do
+                resetPassword(controlEmail.text);
+                Navigator.of(context).pop();
               }
             },
           ),
           SizedBox(height: SizeConfig.screenHeight * 0.1),
-          NoAccountText(),
+          // NoAccountText(),
         ],
       ),
     );
