@@ -113,6 +113,7 @@ class _RequestsState extends State<Requests> {
                             pushNewScreen(context,
                                 screen: ReqDetail(
                                     shopId: widget.shopId,
+                                    i: index,
                                     name: reqDoc[index]['name']));
                           },
                           child: Container(

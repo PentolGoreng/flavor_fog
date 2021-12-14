@@ -1,4 +1,4 @@
-package com.example.flavor_fog
+package com.trigee.flavor_fog
 
 import io.flutter.embedding.android.FlutterActivity
 

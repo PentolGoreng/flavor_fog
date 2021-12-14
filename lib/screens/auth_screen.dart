@@ -1,5 +1,6 @@
 //@dart=2.9
 
+import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
 
@@ -48,6 +49,8 @@ class _AuthScreenState extends State<AuthScreen>
   TextEditingController name = TextEditingController();
   TextEditingController passwordController2 = TextEditingController();
   EmailAuth emailAuth;
+  Timer _timer;
+  int _start = 10;
   bool isLoading = false;
   RegExp regExp1 = RegExp(r'[^A-Za-z0-9]');
   RegExp regExp = RegExp(
@@ -481,8 +484,27 @@ class _AuthScreenState extends State<AuthScreen>
     }
   }
 
+  void startTimer() {
+    const oneSec = const Duration(seconds: 1);
+    _timer = new Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        if (_start == 0) {
+          setState(() {
+            timer.cancel();
+          });
+        } else {
+          setState(() {
+            _start--;
+          });
+        }
+      },
+    );
+  }
+
   void dispose() {
     _animationController.dispose();
+    _timer.cancel();
     super.dispose();
   }
 
@@ -872,6 +894,7 @@ class _AuthScreenState extends State<AuthScreen>
                             submitValid;
                             if (!submitValid) {
                               sendOtp();
+                              startTimer();
                             } else {
                               verify();
                               // try {
@@ -940,7 +963,9 @@ class _AuthScreenState extends State<AuthScreen>
                                   ? "Sign Up"
                                   : (submitValid)
                                       ? "Sign Up"
-                                      : "Request OTP".toUpperCase(),
+                                      : _start > 0 && _start < 10
+                                          ? _start.toString()
+                                          : "Request OTP".toUpperCase(),
                               textAlign: TextAlign.center),
                         ),
                       ),

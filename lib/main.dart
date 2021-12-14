@@ -203,8 +203,6 @@ class _MyAppState extends State<MyApp> {
           ? name == null || name == ""
               ? ProvidedStylesExample(
                   menuScreenContext: context,
-                  name: name,
-                  shopId: shopId,
                 )
               : ReqDetail(
                   name: name,

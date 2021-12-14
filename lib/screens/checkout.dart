@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flavor_fog/constants.dart';
+import 'package:flavor_fog/models/ChatMessage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -36,7 +37,7 @@ class _CheckOutState extends State<CheckOut> {
   String _newAdd;
   int number;
   TextEditingController _addressC = TextEditingController();
-
+  bool exist = false;
   Future<Response> sendNotification(
       List<String> tokenIdList, String contents, String heading) async {
     return await post(
@@ -66,6 +67,7 @@ class _CheckOutState extends State<CheckOut> {
     );
   }
 
+  String request;
   String tokenId;
   _getToken() async {
     var status = await OneSignal.shared.getDeviceState();
@@ -123,7 +125,6 @@ class _CheckOutState extends State<CheckOut> {
       playerIds: daftar,
       content: tokenId,
       additionalData: {
-        "token": tokenId,
         "name": name,
       },
       heading: "Booking Request From",
@@ -155,9 +156,25 @@ class _CheckOutState extends State<CheckOut> {
             }));
   }
 
+  inis() async {
+    final shopDoc2 = await FirebaseFirestore.instance
+        .collection('shops')
+        .doc(widget.shopId)
+        .collection('request')
+        .doc(name)
+        .get();
+    if (shopDoc2.exists) {
+      await setState(() {
+        request = shopDoc2['request'];
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // _getToken();
+
+    inis();
     return Scaffold(
       body: StreamBuilder(
           stream: FirebaseFirestore.instance
@@ -431,33 +448,59 @@ class _CheckOutState extends State<CheckOut> {
                               //     .collection('request')
                               //     .doc(widget.shopId)
                               //     .set({'shop': widget.selected});
-                              for (var i = 0; i < checkDB.length; i++) {
-                                await FirebaseFirestore.instance
-                                    .collection('shops')
-                                    .doc(widget.shopId)
-                                    .collection('request')
-                                    .add({
-                                  "request": "waiting",
-                                  "id": checkDB[i]['productId'],
-                                  "title": checkDB[i]['title'],
-                                  "price": checkDB[i]['price'],
-                                  "number": checkDB[i]['total'],
-                                  "shop": widget.selected,
-                                  "token": tokenId,
-                                  "shopId": widget.shopId,
-                                  "uid": _uid,
-                                  "time": Timestamp.now(),
-                                  "name": name,
-                                });
+                              await FirebaseFirestore.instance
+                                  .collection("shops")
+                                  .doc('${widget.shopId}')
+                                  .collection('request')
+                                  .where('name', isEqualTo: name)
+                                  .get()
+                                  .then((doc) {
+                                if (doc.docs.isNotEmpty)
+                                  setState(() {
+                                    exist = true;
+                                  });
+                              });
+
+                              if (!exist) {
+                                for (var i = 0; i < checkDB.length; i++) {
+                                  DocumentReference docRef =
+                                      await FirebaseFirestore.instance
+                                          .collection('shops')
+                                          .doc(widget.shopId)
+                                          .collection('request')
+                                          .add({
+                                    "request": "waiting",
+                                    "id": checkDB[i]['productId'],
+                                    "title": checkDB[i]['title'],
+                                    "price": checkDB[i]['price'],
+                                    "number": checkDB[i]['total'],
+                                    "shop": widget.selected,
+                                    "token": tokenId,
+                                    "shopId": widget.shopId,
+                                    "uid": _uid,
+                                    "time": Timestamp.now(),
+                                    "name": name,
+                                  });
+                                  FirebaseFirestore.instance
+                                      .collection('shops')
+                                      .doc(widget.shopId)
+                                      .collection('request')
+                                      .doc(docRef.id)
+                                      .update({'doc': docRef.id});
+                                }
+
+                                await send();
                               }
                               // await getDataName();
                               // sendNotification(daftar, "Test 1", "test");
-                              await send();
+
                               daftar.clear;
 
                               print(daftar);
                             },
-                            child: Center(child: Text('Submit Order')))
+                            child: Center(
+                                child:
+                                    Text(exist == false ? 'Submit Order' : "")))
                       ],
                     ),
                   );

@@ -323,7 +323,6 @@ class _BodyState extends State<Body> {
                                   () {
                                     selected = cartDB[index]['shop'];
                                     shopId = cartDB[index]['shopId'];
-                                    token = cartDB[index]['shopToken'];
                                   },
                                 )
                               : setState(

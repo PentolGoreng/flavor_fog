@@ -54,18 +54,16 @@ class _ProfilePicState extends State<ProfilePic> {
               //     fit: BoxFit.cover,
               //   ),
               // )),
-              CircleAvatar(
-                radius: 18,
-                child: ClipOval(
-                  child: Image.network(
-                    image,
-                    errorBuilder: (BuildContext context, Object exception,
-                        StackTrace stackTrace) {
-                      return Image.asset('assets/images/profileakun.png');
-                    },
+              Container(
+                  decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  image: NetworkImage(
+                    '$image',
                   ),
+                  fit: BoxFit.cover,
                 ),
-              ),
+              )),
               // Positioned(
               //   right: -16,
               //   bottom: 0,

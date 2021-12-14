@@ -92,10 +92,10 @@ class DetailsScreen extends StatelessWidget {
           double rating1 = (ratings.sum) / snapshot.data.docs.length;
           return Scaffold(
             backgroundColor: Color(0xFF212121),
-            appBar: PreferredSize(
-              preferredSize: Size.fromHeight(AppBar().preferredSize.height),
-              child: CustomAppBar(rating: rating1),
-            ),
+            // appBar: PreferredSize(
+            //   preferredSize: Size.fromHeight(AppBar().preferredSize.height),
+            //   child: CustomAppBar(rating: rating1),
+            // ),
             body: Body(
                 title: title,
                 price: price,

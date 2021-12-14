@@ -55,7 +55,7 @@ class _ProductListState extends State<ProductList>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  width: SizeConfig.screenWidth * 0.6,
+                  width: SizeConfig.screenWidth * 0.7,
                   decoration: BoxDecoration(
                     color: kSecondaryColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(15),
@@ -90,11 +90,11 @@ class _ProductListState extends State<ProductList>
                     );
                   },
                 ),
-                IconBtnWithCounter(
-                  svgSrc: "assets/icons/Bell.svg",
-                  numOfitem: 3,
-                  press: () {},
-                ),
+                // IconBtnWithCounter(
+                //   svgSrc: "assets/icons/Bell.svg",
+                //   numOfitem: 3,
+                //   press: () {},
+                // ),
               ],
             ),
           ),

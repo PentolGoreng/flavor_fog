@@ -79,6 +79,43 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:273630998057:android:35a51f831dea99ddcd7638",
+        "android_client_info": {
+          "package_name": "com.trigee.flavor_fog"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "273630998057-l5i28uc9bioltk47rm3lja76jsgmva5m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.trigee.flavor_fog",
+            "certificate_hash": "9b2cc8a28f4193c5296e94398e5bfc2b308ecb48"
+          }
+        },
+        {
+          "client_id": "273630998057-m671khaim5t73efio0ch2b1uiso1oks5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDe2qHpTEzKAWRk7zqSqXfRAg6r1tvna64"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "273630998057-m671khaim5t73efio0ch2b1uiso1oks5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"
