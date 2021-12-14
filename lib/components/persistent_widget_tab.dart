@@ -18,6 +18,7 @@ import 'package:flavor_fog/screens/messages/message_screen.dart';
 import 'package:flavor_fog/screens/profile/profile_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 class ProvidedStylesExample extends StatefulWidget {
@@ -210,11 +211,7 @@ class _ProvidedStylesExampleState extends State<ProvidedStylesExample> {
               width: 50.0,
               color: Colors.white,
               child: ElevatedButton(
-                child: Text("Close"),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
+                  child: Text("Close"), onPressed: () => SystemNavigator.pop()),
             ),
           );
           return false;
