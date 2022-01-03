@@ -55,7 +55,8 @@ class NotifPlugin {
       //       "Opened notification: \n${result.notification.jsonRepresentation().replaceAll("\\n", "\n")}";
       // });
     });
-    FirebaseMessaging.onMessageOpenedApp.listen(
+
+    FirebaseMessaging.onMessage.listen(
       (RemoteMessage message) async {
         // print('onLaunch : $message');
         _navigate(message.toString());

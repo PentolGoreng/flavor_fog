@@ -210,12 +210,12 @@ class _AuthScreenState extends State<AuthScreen>
             email: email.text, password: password.text);
 
         await inputData();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Login SuccesFul'),
-            duration: Duration(seconds: 5),
-          ),
-        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(
+        //     content: Text('Login SuccesFul'),
+        //     duration: Duration(seconds: 5),
+        //   ),
+        // );
         pushNewScreen(context,
             screen: ProvidedStylesExample(
               menuScreenContext: context,

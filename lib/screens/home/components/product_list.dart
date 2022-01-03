@@ -36,7 +36,7 @@ class ProductList extends StatefulWidget {
 
 class _ProductListState extends State<ProductList>
     with AutomaticKeepAliveClientMixin {
-  String search;
+  String search = "";
   int currentPage;
   final PageController controller = PageController();
 
@@ -129,7 +129,7 @@ class _ProductListState extends State<ProductList>
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(top: 15),
-                        child: StreamBuilder(
+                        child: StreamBuilder<QuerySnapshot>(
                           stream: FirebaseFirestore.instance
                               .collection('products')
                               // .orderBy('sentAt', descending: true)
@@ -144,13 +144,21 @@ class _ProductListState extends State<ProductList>
                               return Center(child: CircularProgressIndicator());
                             }
                             final productDB = snapshot.data.docs;
+                            final productFilter = snapshot.data.docs.where(
+                                (DocumentSnapshot<Object> element) =>
+                                    element['title']
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(search.toLowerCase()));
 
                             return GridView.count(
                               shrinkWrap: true,
                               crossAxisCount: 2,
                               children: [
                                 ...List.generate(
-                                  snapshot.data.docs.length,
+                                  search == "" || search == null
+                                      ? snapshot.data.docs.length
+                                      : productFilter.length,
                                   (index) {
                                     // Product(
                                     //     title: productDB[index]['title'],
@@ -164,15 +172,30 @@ class _ProductListState extends State<ProductList>
                                     //     id: productDB[index]['id'],
                                     //     images: List.from(productDB[index]['images']),
                                     //     description: productDB[index]['desc']);
-                                    return ProductCard1(
-                                        title: productDB[index]['title'],
-                                        price: productDB[index]['price'],
-                                        id: productDB[index]['id'],
-                                        images: List.from(
-                                            productDB[index]['images']),
-                                        description: productDB[index]['desc'],
-                                        shop: productDB[index]['shop'],
-                                        shopId: productDB[index]['shopId']);
+                                    return search == "" || search == null
+                                        ? ProductCard1(
+                                            title: productDB[index]['title'],
+                                            price: productDB[index]['price'],
+                                            id: productDB[index]['id'],
+                                            images: List.from(
+                                                productDB[index]['images']),
+                                            description: productDB[index]
+                                                ['desc'],
+                                            shop: productDB[index]['shop'],
+                                            shopId: productDB[index]['shopId'])
+                                        : ProductCard1(
+                                            title: productFilter[index]
+                                                ['title'],
+                                            price: productFilter[index]
+                                                ['price'],
+                                            id: productFilter[index]['id'],
+                                            images: List.from(
+                                                productFilter[index]['images']),
+                                            description: productFilter[index]
+                                                ['desc'],
+                                            shop: productFilter[index]['shop'],
+                                            shopId: productFilter[index]
+                                                ['shopId']);
                                     return SizedBox
                                         .shrink(); // here by default width and height is 0
                                   },
@@ -187,6 +210,15 @@ class _ProductListState extends State<ProductList>
                                 //   )
                               ],
                             );
+
+                            // MessageBubble(
+                            //     message: chatDocuments[index]['text'],
+                            //     isMe: chatDocuments[index]['userId'] ==
+                            //         futureSnapshot.data.uid,
+                            //     key: ValueKey(chatDocuments[index].id),
+                            //     firstName: chatDocuments[index]['name'],
+                            //     imageUrl: chatDocuments[index]['image'],
+                            //   )
                           },
                         ),
                       ),

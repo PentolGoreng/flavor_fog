@@ -123,11 +123,11 @@ class _CheckOutState extends State<CheckOut> {
     _getToken();
     await OneSignal.shared.postNotification(OSCreateNotification(
       playerIds: daftar,
-      content: tokenId,
+      content: "Booking Request",
       additionalData: {
         "name": name,
       },
-      heading: "Booking Request From",
+      heading: "Flavour Fog",
       // buttons: [
       //   OSActionButton(text: "test1", id: "id1"),
       //   OSActionButton(text: "test2", id: "id2")
@@ -168,6 +168,20 @@ class _CheckOutState extends State<CheckOut> {
         request = shopDoc2['request'];
       });
     }
+    // await FirebaseFirestore.instance
+    //     .collection("shops")
+    //     .doc('${widget.shopId}')
+    //     .collection('request')
+    //     .where('name', isEqualTo: name)
+    //     .get()
+    //     .then((doc) {
+    //   if (!exist) {
+    //     if (doc.docs.isNotEmpty)
+    //       setState(() {
+    //         exist = true;
+    //       });
+    //   }
+    // });
   }
 
   @override
@@ -227,7 +241,7 @@ class _CheckOutState extends State<CheckOut> {
                       children: [
                         Center(
                             child: Text(
-                          'Checkout',
+                          'Product Booking',
                           style: TextStyle(
                             fontSize: 25,
                             fontWeight: FontWeight.w500,
@@ -241,146 +255,147 @@ class _CheckOutState extends State<CheckOut> {
                             padding: EdgeInsets.all(8),
                             child: Column(
                               children: [
-                                Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text("Address :")),
-                                Container(
-                                    // decoration: BoxDecoration(
-                                    //   boxShadow: [
-                                    //     BoxShadow(
-                                    //       color: Colors.black,
-                                    //     ),
-                                    //     BoxShadow(
-                                    //         color: login_bg,
-                                    //         offset:
-                                    //             Offset.fromDirection(180, 5),
-                                    //         blurRadius: 2,
-                                    //         spreadRadius: 3),
-                                    //   ],
-                                    // ),
-                                    height: 40,
-                                    child: Align(
-                                      alignment: checkDB1[0]['address'] == ""
-                                          ? Alignment.center
-                                          : Alignment.centerRight,
-                                      child: GestureDetector(
-                                          onTap: () {
-                                            if (checkDB1[0]['address'] != "") {
-                                              _addressC = TextEditingController(
-                                                  text: checkDB1[0]['address']);
-                                            }
-                                            showModalBottomSheet(
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.vertical(
-                                                          top: Radius.circular(
-                                                              25.0)),
-                                                ),
-                                                context: context,
-                                                builder: (_) => Container(
-                                                    color: login_bg,
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal: 20,
-                                                            vertical: 20),
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Center(
-                                                          child: Text(
-                                                            'Address',
-                                                            style: TextStyle(
-                                                                fontSize: 20),
-                                                          ),
-                                                        ),
-                                                        Spacer(),
-                                                        TextField(
-                                                          decoration:
-                                                              InputDecoration(
-                                                                  hintText:
-                                                                      "Address details"),
-                                                          maxLength: 150,
-                                                          maxLines: 4,
-                                                          controller: _addressC,
-                                                          onChanged: (text) {},
-                                                        ),
+                                // Align(
+                                //     alignment: Alignment.centerLeft,
+                                //     child: Text("Address :")),
+                                // Container(
+                                //     // decoration: BoxDecoration(
+                                //     //   boxShadow: [
+                                //     //     BoxShadow(
+                                //     //       color: Colors.black,
+                                //     //     ),
+                                //     //     BoxShadow(
+                                //     //         color: login_bg,
+                                //     //         offset:
+                                //     //             Offset.fromDirection(180, 5),
+                                //     //         blurRadius: 2,
+                                //     //         spreadRadius: 3),
+                                //     //   ],
+                                //     // ),
+                                //     height: 40,
+                                //     child: Align(
+                                //       alignment: checkDB1[0]['address'] == ""
+                                //           ? Alignment.center
+                                //           : Alignment.centerRight,
+                                //       child: GestureDetector(
+                                //           onTap: () {
+                                //             if (checkDB1[0]['address'] != "") {
+                                //               _addressC = TextEditingController(
+                                //                   text: checkDB1[0]['address']);
+                                //             }
+                                //             showModalBottomSheet(
+                                //                 shape: RoundedRectangleBorder(
+                                //                   borderRadius:
+                                //                       BorderRadius.vertical(
+                                //                           top: Radius.circular(
+                                //                               25.0)),
+                                //                 ),
+                                //                 context: context,
+                                //                 builder: (_) => Container(
+                                //                     color: login_bg,
+                                //                     padding:
+                                //                         EdgeInsets.symmetric(
+                                //                             horizontal: 20,
+                                //                             vertical: 20),
+                                //                     child: Column(
+                                //                       mainAxisAlignment:
+                                //                           MainAxisAlignment
+                                //                               .spaceEvenly,
+                                //                       children: [
+                                //                         Center(
+                                //                           child: Text(
+                                //                             'Address',
+                                //                             style: TextStyle(
+                                //                                 fontSize: 20),
+                                //                           ),
+                                //                         ),
+                                //                         Spacer(),
+                                //                         TextField(
+                                //                           decoration:
+                                //                               InputDecoration(
+                                //                                   hintText:
+                                //                                       "Address details"),
+                                //                           maxLength: 150,
+                                //                           maxLines: 4,
+                                //                           controller: _addressC,
+                                //                           onChanged: (text) {},
+                                //                         ),
 
-                                                        // TextField(),
-                                                        ElevatedButton(
-                                                          onPressed: () async {
-                                                            FocusScope.of(
-                                                                    context)
-                                                                .unfocus();
-                                                            if (_addressC.text
-                                                                    .trim()
-                                                                    .isEmpty ||
-                                                                _addressC.text
-                                                                    .trim()
-                                                                    .isEmpty) {
-                                                              return null;
-                                                            } else {
-                                                              FirebaseFirestore
-                                                                  .instance
-                                                                  .collection(
-                                                                      'users')
-                                                                  .doc(user.uid)
-                                                                  .update({
-                                                                'address':
-                                                                    _addressC
-                                                                        .text
-                                                              });
-                                                            }
-                                                            _addressC.clear();
-                                                            Navigator.pop(
-                                                                context);
-                                                          },
-                                                          child: Text(checkDB1[
-                                                                          0][
-                                                                      'address'] ==
-                                                                  ""
-                                                              ? 'Add Address'
-                                                              : 'Update Address'),
-                                                        ),
-                                                        SizedBox(
-                                                          height:
-                                                              kBottomNavigationBarHeight,
-                                                        )
-                                                      ],
-                                                    ))).whenComplete(() {
-                                              _addressC.clear();
-                                            });
-                                          },
-                                          child: Text(
-                                            checkDB1[0]['address'] == "" ||
-                                                    checkDB1[0]['address'] ==
-                                                        null
-                                                ? '+ Add address'
-                                                : checkDB1[0]['address'],
-                                            style: TextStyle(
-                                                fontSize:
-                                                    checkDB1[0]['address'] == ""
-                                                        ? 15
-                                                        : 12,
-                                                color:
-                                                    checkDB1[0]['address'] == ""
-                                                        ? kPrimaryColor
-                                                        : kPrimaryColor),
-                                            textAlign:
-                                                checkDB1[0]['address'] == ""
-                                                    ? TextAlign.center
-                                                    : TextAlign.right,
-                                          )),
-                                    )),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                Center(
-                                    child: Text(
-                                  'Tap on your address to edit',
-                                  style: TextStyle(color: Colors.grey.shade700),
-                                )),
+                                //                         // TextField(),
+                                //                         ElevatedButton(
+                                //                           onPressed: () async {
+                                //                             FocusScope.of(
+                                //                                     context)
+                                //                                 .unfocus();
+                                //                             if (_addressC.text
+                                //                                     .trim()
+                                //                                     .isEmpty ||
+                                //                                 _addressC.text
+                                //                                     .trim()
+                                //                                     .isEmpty) {
+                                //                               return null;
+                                //                             } else {
+                                //                               FirebaseFirestore
+                                //                                   .instance
+                                //                                   .collection(
+                                //                                       'users')
+                                //                                   .doc(user.uid)
+                                //                                   .update({
+                                //                                 'address':
+                                //                                     _addressC
+                                //                                         .text
+                                //                               });
+                                //                             }
+                                //                             _addressC.clear();
+                                //                             Navigator.pop(
+                                //                                 context);
+                                //                           },
+                                //                           child: Text(checkDB1[
+                                //                                           0][
+                                //                                       'address'] ==
+                                //                                   ""
+                                //                               ? 'Add Address'
+                                //                               : 'Update Address'),
+                                //                         ),
+                                //                         SizedBox(
+                                //                           height:
+                                //                               kBottomNavigationBarHeight,
+                                //                         )
+                                //                       ],
+                                //                     ))).whenComplete(() {
+                                //               _addressC.clear();
+                                //             });
+                                //           },
+                                //           child: Text(
+                                //             checkDB1[0]['address'] == "" ||
+                                //                     checkDB1[0]['address'] ==
+                                //                         null
+                                //                 ? '+ Add address'
+                                //                 : checkDB1[0]['address'],
+                                //             style: TextStyle(
+                                //                 fontSize:
+                                //                     checkDB1[0]['address'] == ""
+                                //                         ? 15
+                                //                         : 12,
+                                //                 color:
+                                //                     checkDB1[0]['address'] == ""
+                                //                         ? kPrimaryColor
+                                //                         : kPrimaryColor),
+                                //             textAlign:
+                                //                 checkDB1[0]['address'] == ""
+                                //                     ? TextAlign.center
+                                //                     : TextAlign.right,
+                                //           )),
+                                //     )),
+                                // ^^ Address ^^
+                                // SizedBox(
+                                //   height: 20,
+                                // ),
+                                // Center(
+                                //     child: Text(
+                                //   'Tap on your address to edit',
+                                //   style: TextStyle(color: Colors.grey.shade700),
+                                // )),
                               ],
                             )),
                         Expanded(
@@ -448,18 +463,6 @@ class _CheckOutState extends State<CheckOut> {
                               //     .collection('request')
                               //     .doc(widget.shopId)
                               //     .set({'shop': widget.selected});
-                              await FirebaseFirestore.instance
-                                  .collection("shops")
-                                  .doc('${widget.shopId}')
-                                  .collection('request')
-                                  .where('name', isEqualTo: name)
-                                  .get()
-                                  .then((doc) {
-                                if (doc.docs.isNotEmpty)
-                                  setState(() {
-                                    exist = true;
-                                  });
-                              });
 
                               if (!exist) {
                                 for (var i = 0; i < checkDB.length; i++) {
@@ -490,6 +493,14 @@ class _CheckOutState extends State<CheckOut> {
                                 }
 
                                 await send();
+                                for (var i = 0; i < checkDB.length; i++) {
+                                  await FirebaseFirestore.instance
+                                      .collection("users")
+                                      .doc(user.uid)
+                                      .collection("cart")
+                                      .doc(checkDB[i]['productId'])
+                                      .delete();
+                                }
                               }
                               // await getDataName();
                               // sendNotification(daftar, "Test 1", "test");
@@ -497,6 +508,7 @@ class _CheckOutState extends State<CheckOut> {
                               daftar.clear;
 
                               print(daftar);
+                              Navigator.pop(context);
                             },
                             child: Center(
                                 child:

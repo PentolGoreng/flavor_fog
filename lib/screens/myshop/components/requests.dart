@@ -113,7 +113,8 @@ class _RequestsState extends State<Requests> {
                             pushNewScreen(context,
                                 screen: ReqDetail(
                                     shopId: widget.shopId,
-                                    i: index,
+                                    doc: reqDoc[index]['doc'],
+                                    // i: index,
                                     name: reqDoc[index]['name']));
                           },
                           child: Container(
@@ -122,7 +123,8 @@ class _RequestsState extends State<Requests> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(reqDoc[index]['name']),
+                                Text(
+                                    '${reqDoc[index]['title']}\n${reqDoc[index]['name']}'),
                                 // Text(reqDoc[index]['time'].toDate()),
                                 Text(
                                     StringExtension.displayTimeAgoFromTimestamp(

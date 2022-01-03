@@ -1,6 +1,11 @@
+//@dart=2.9
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flavor_fog/screens/home/components/product_list.dart';
+import 'package:flavor_fog/screens/myshop/components/requests.dart';
 import 'package:flutter/material.dart';
-
+import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:flavor_fog/globals.dart' as globals;
 import '../../../size_config.dart';
 import 'categories.dart';
 import 'discount_banner.dart';
@@ -9,8 +14,49 @@ import 'popular_product.dart';
 import 'special_offers.dart';
 
 class Body extends StatelessWidget {
+  String shopId;
+  checkshop() async {
+    final shopDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser.uid)
+        .get();
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser.uid)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (shopDoc.data().containsValue("hasShop")) {
+        shopId = shopDoc['shopId'];
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    OneSignal.shared
+        .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+      // navigatorKey.currentState.pushNamed(Requests.routeName);
+      checkshop();
+      // name = result.notification.additionalData['name'];
+
+      print('NOTIFICATION OPENED HANDLER CALLED WITH: ${result}');
+      // print('${result.notification.additionalData['name']}');
+      // print(shopId);
+
+      globals.appNavigator.currentState.push(MaterialPageRoute(
+          builder: (context) => Requests(
+                shopId: shopId,
+              )));
+
+      print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
+      // print(
+      //     'AAAAAAAAAAAAAAAAAAA\n${result.notification.jsonRepresentation().replaceAll("\\n", "\n")}');
+      // this.setState(() {
+      //   _debugLabelString =
+      //       "Opened notification: \n${result.notification.jsonRepresentation().replaceAll("\\n", "\n")}";
+      // });
+    });
     return Container(
       child: Column(
         children: [

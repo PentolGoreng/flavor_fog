@@ -8,6 +8,7 @@ import 'package:flavor_fog/constants.dart';
 import 'package:flavor_fog/models/ChatMessage.dart';
 import 'package:flavor_fog/screens/account/account_screen.dart';
 import 'package:flavor_fog/screens/myshop/myshop_screen.dart';
+import 'package:flavor_fog/screens/profile/components/help.dart';
 import 'package:flavor_fog/size_config.dart';
 import 'package:flavor_fog/temprating.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ import 'package:flavor_fog/screens/auth_screen.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'profile_menu.dart';
 import 'profile_pic.dart';
 
@@ -39,6 +41,7 @@ class _BodyState extends State<Body> {
     final user = FirebaseAuth.instance.currentUser;
     final uid = user.uid;
   }
+
   var _newShop = '';
   var _newShop1 = '';
   _submit() async {
@@ -111,14 +114,21 @@ class _BodyState extends State<Body> {
           // ),
 
           ProfileMenu(
-            color: Color(0xFF212121),
-            text: "Help Center",
-            icon: "assets/icons/Question mark.svg",
-            press: () {},
-          ),
+              color: Color(0xFF212121),
+              text: "Help Center",
+              icon: "assets/icons/Question mark.svg",
+              press: () => {
+                    Navigator.of(context, rootNavigator: true).push(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return HelpScreen();
+                        },
+                      ),
+                    )
+                  }),
           ProfileMenu(
             color: Color(0xFF212121),
-            text: "Shop Orders",
+            text: "My Orders",
             icon: "assets/icons/Mail.svg",
             press: () {},
           ),

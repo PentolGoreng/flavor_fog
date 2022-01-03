@@ -6,10 +6,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ReqDetail extends StatefulWidget {
-  const ReqDetail({Key key, this.shopId, this.name, this.i}) : super(key: key);
+  const ReqDetail({
+    Key key,
+    this.shopId,
+    this.name,
+    this.doc,
+  }) : super(key: key);
   final String shopId;
+  final String doc;
   final String name;
-  final int i;
+  // final int i;
   static String routeName = "/reqD";
 
   @override
@@ -33,7 +39,7 @@ class _ReqDetailState extends State<ReqDetail> {
               .collection('shops')
               .doc(widget.shopId)
               .collection('request')
-              .where('name', isEqualTo: widget.name)
+              .where('doc', isEqualTo: widget.doc)
               .snapshots(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -41,10 +47,12 @@ class _ReqDetailState extends State<ReqDetail> {
             }
             final dataDetail = snapshot.data.docs;
             String _name = "";
-            widget.name == "" || widget.name == null
-                ? _name = widget.name
-                : _name = dataDetail[0]['name'];
-            String doc = dataDetail[widget.i]['doc'];
+            // widget.name == "" || widget.name == null
+            // ?
+            _name = widget.name;
+            // :
+            // _name = dataDetail[0]['name'];
+            // String doc = dataDetail[widget.i]['doc'];
             return Column(
               children: [
                 Spacer(),
@@ -52,18 +60,15 @@ class _ReqDetailState extends State<ReqDetail> {
                   child: Text(_name),
                 ),
                 Container(
-                    padding: EdgeInsets.all(15),
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: 1,
-                      itemBuilder: (context, index) => Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(dataDetail[widget.i]['title']),
-                          Text('x${dataDetail[widget.i]['number']}'),
-                        ],
-                      ),
-                    )),
+                  padding: EdgeInsets.all(15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(dataDetail[0]['title']),
+                      Text('x${dataDetail[0]['number']}'),
+                    ],
+                  ),
+                ),
                 Spacer(),
                 TextButton(
                     onPressed: () async {
@@ -76,9 +81,18 @@ class _ReqDetailState extends State<ReqDetail> {
                           .collection('shops')
                           .doc(widget.shopId)
                           .collection('request')
-                          .doc(dataDetail[widget.i]['doc'])
+                          .doc(widget.doc)
                           .delete();
-                      print(dataDetail[widget.i]);
+
+                      Navigator.of(context, rootNavigator: true).push(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return Requests(
+                              shopId: widget.shopId,
+                            );
+                          },
+                        ),
+                      );
                     },
                     child: Text('Accept')),
                 TextButton(
@@ -95,8 +109,17 @@ class _ReqDetailState extends State<ReqDetail> {
                           .collection('shops')
                           .doc(widget.shopId)
                           .collection('request')
-                          .doc(dataDetail[widget.i]['doc'])
+                          .doc(widget.doc)
                           .delete();
+                      Navigator.of(context, rootNavigator: true).push(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return Requests(
+                              shopId: widget.shopId,
+                            );
+                          },
+                        ),
+                      );
                     },
                     child: Text('Reject/Not Available')),
               ],

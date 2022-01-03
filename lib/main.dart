@@ -22,9 +22,11 @@ import 'package:flavor_fog/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'globals.dart' as globals;
 
 // GlobalKey<NavigatorState> globals = GlobalKey<NavigatorState>();
 void main() async {
+  globals.appNavigator = GlobalKey<NavigatorState>();
   // final GlobalKey<NavigatorState> navigatorKey =
   //     new GlobalKey<NavigatorState>();
   WidgetsFlutterBinding.ensureInitialized();
@@ -74,6 +76,17 @@ class _MyAppState extends State<MyApp> {
             "Notification received in foreground notification: \n${event.notification.jsonRepresentation().replaceAll("\\n", "\n")}";
       });
     });
+    FirebaseMessaging.onMessage.listen(
+      (RemoteMessage message) async {
+        // print('onLaunch : $message');
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => Requests(
+                      shopId: shopId,
+                    )));
+      },
+    );
     OneSignal.shared
         .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
       // navigatorKey.currentState.pushNamed(Requests.routeName);
@@ -82,7 +95,10 @@ class _MyAppState extends State<MyApp> {
       });
       print('NOTIFICATION OPENED HANDLER CALLED WITH: ${result}');
       print('${result.notification.additionalData['name']}');
+      print(shopId);
+      navigatorKey.currentState.pushNamed('/request');
 
+      print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
       // print(
       //     'AAAAAAAAAAAAAAAAAAA\n${result.notification.jsonRepresentation().replaceAll("\\n", "\n")}');
       // this.setState(() {
@@ -131,7 +147,10 @@ class _MyAppState extends State<MyApp> {
         .get()
         .then((DocumentSnapshot documentSnapshot) {
       if (shopDoc.data().containsValue("hasShop")) {
-        shopId = shopDoc['shopId'];
+        setState(() {
+          shopId = shopDoc['shopId'];
+        });
+
         FirebaseFirestore.instance
             .collection('shop')
             .doc(shopDoc['shopId'])
@@ -147,9 +166,10 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     configOneSignel();
+    inputData();
     initPlatformState();
     // OneSignal.shared.setExternalUserId(user.uid);
-    inputData();
+
     // OneSignal.shared.disablePush(false);
     // OneSignal.shared.setNotificationOpenedHandler((openedResult) {
     //   print(openedResult.notification.rawPayload.toString());
@@ -168,7 +188,8 @@ class _MyAppState extends State<MyApp> {
   //   // Since the only thing we can get current are new Alerts -- go to the Alert screen
   //   globals.currentState.pushNamed('/home');
   // }
-
+  final GlobalKey<NavigatorState> navigatorKey =
+      new GlobalKey<NavigatorState>();
   @override
   Widget build(BuildContext context) {
 //     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -192,7 +213,7 @@ class _MyAppState extends State<MyApp> {
       theme: darkThemeData(context),
       // darkTheme: darkThemeData(context),
       title: 'Flavour Fog',
-      navigatorKey: widget.key,
+      navigatorKey: globals.appNavigator,
       // navigatorKey: globals,
 
       // theme: theme(),
@@ -200,14 +221,13 @@ class _MyAppState extends State<MyApp> {
       // We use routeName so that we dont need to remember the name
       // initialRoute: _user(),
       home: user != null
-          ? name == null || name == ""
-              ? ProvidedStylesExample(
-                  menuScreenContext: context,
-                )
-              : ReqDetail(
-                  name: name,
-                  shopId: shopId,
-                )
+          // ? name == null || name == ""
+          ? ProvidedStylesExample(
+              menuScreenContext: context,
+            )
+          // : Requests(
+          //     shopId: shopId,
+          //   )
           : AuthScreen(),
       routes: routes,
     );
