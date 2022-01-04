@@ -16,6 +16,7 @@ import '../../../size_config.dart';
 import 'cart_card.dart';
 
 class Body extends StatefulWidget {
+  static String routeName = "/cart";
   @override
   _BodyState createState() => _BodyState();
 }

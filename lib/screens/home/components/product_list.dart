@@ -38,6 +38,7 @@ class ProductList extends StatefulWidget {
 class _ProductListState extends State<ProductList>
     with AutomaticKeepAliveClientMixin {
   String search = "";
+  TextEditingController searchController = TextEditingController();
   int currentPage;
   final PageController controller = PageController();
   Map<String, dynamic> _list;
@@ -73,6 +74,7 @@ class _ProductListState extends State<ProductList>
                     borderRadius: BorderRadius.circular(15),
                   ),
                   child: TextField(
+                    controller: searchController,
                     textAlignVertical: TextAlignVertical.center,
                     onSubmitted: (value) {
                       setState(() {
@@ -87,6 +89,17 @@ class _ProductListState extends State<ProductList>
                         focusedBorder: InputBorder.none,
                         enabledBorder: InputBorder.none,
                         hintText: "Search product",
+                        suffixIcon: searchController.text == ""
+                            ? null
+                            : IconButton(
+                                icon: Icon(Icons.cancel),
+                                onPressed: () {
+                                  setState(() {
+                                    search = "";
+                                  });
+                                  searchController.clear();
+                                },
+                              ),
                         prefixIcon: Icon(Icons.search)),
                   ),
                 ),
@@ -257,12 +270,21 @@ class _ProductListState extends State<ProductList>
                               return Center(child: CircularProgressIndicator());
                             }
                             final shopDB = snapshot.data.docs;
+                            final shopFilter = snapshot.data.docs
+                                .where((DocumentSnapshot<Object> element) =>
+                                    element['title']
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(search.toLowerCase()))
+                                .toList();
 
                             return ListView(
                               shrinkWrap: true,
                               children: [
                                 ...List.generate(
-                                  snapshot.data.docs.length,
+                                  search == null || search == ""
+                                      ? snapshot.data.docs.length
+                                      : shopFilter.length,
                                   (index) {
                                     // Product(
                                     //     title: productDB[index]['title'],
@@ -276,12 +298,20 @@ class _ProductListState extends State<ProductList>
                                     //     id: productDB[index]['id'],
                                     //     images: List.from(productDB[index]['images']),
                                     //     description: productDB[index]['desc']);
-                                    return ShopCard(
-                                      title: shopDB[index]['title'],
-                                      shopId: shopDB[index]['shopId'],
-                                      images: shopDB[index]['image'],
-                                      address: shopDB[index]['address'],
-                                    );
+                                    return search == null || search == ""
+                                        ? ShopCard(
+                                            title: shopDB[index]['title'],
+                                            shopId: shopDB[index]['shopId'],
+                                            images: shopDB[index]['image'],
+                                            address: shopDB[index]['address'],
+                                          )
+                                        : ShopCard(
+                                            title: shopFilter[index]['title'],
+                                            shopId: shopFilter[index]['shopId'],
+                                            images: shopFilter[index]['image'],
+                                            address: shopFilter[index]
+                                                ['address'],
+                                          );
 
                                     return SizedBox
                                         .shrink(); // here by default width and height is 0

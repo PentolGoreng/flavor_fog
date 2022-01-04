@@ -1,4 +1,5 @@
 // @dart=2.9
+import 'package:flavor_fog/components/calculator.dart';
 import 'package:flavor_fog/components/news.dart';
 import 'package:flavor_fog/components/rss_reader.dart';
 import 'package:flavor_fog/constants.dart';
@@ -66,6 +67,15 @@ class _ProvidedStylesExampleState extends State<ProvidedStylesExample> {
           });
         },
       ),
+      Calculator(
+        menuScreenContext: widget.menuScreenContext,
+        hideStatus: _hideNavBar,
+        onScreenHideButtonPressed: () {
+          setState(() {
+            _hideNavBar = !_hideNavBar;
+          });
+        },
+      ),
       // HomeScreen(
       //   menuScreenContext: widget.menuScreenContext,
       //   hideStatus: _hideNavBar,
@@ -112,6 +122,19 @@ class _ProvidedStylesExampleState extends State<ProvidedStylesExample> {
       PersistentBottomNavBarItem(
         icon: Icon(Icons.radio),
         title: ("News"),
+        activeColorPrimary: kPrimaryColor,
+        inactiveColorPrimary: Colors.grey,
+        routeAndNavigatorSettings: RouteAndNavigatorSettings(
+          initialRoute: '/',
+          routes: {
+            // '/first': (context) => ProfileScreen(),
+            //   '/second': (context) => MainScreen3(),
+          },
+        ),
+      ),
+      PersistentBottomNavBarItem(
+        icon: Icon(Icons.calculate),
+        title: ("Misc"),
         activeColorPrimary: kPrimaryColor,
         inactiveColorPrimary: Colors.grey,
         routeAndNavigatorSettings: RouteAndNavigatorSettings(

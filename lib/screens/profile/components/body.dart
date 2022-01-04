@@ -9,6 +9,7 @@ import 'package:flavor_fog/models/ChatMessage.dart';
 import 'package:flavor_fog/screens/account/account_screen.dart';
 import 'package:flavor_fog/screens/myshop/myshop_screen.dart';
 import 'package:flavor_fog/screens/profile/components/help.dart';
+import 'package:flavor_fog/screens/profile/components/orders.dart';
 import 'package:flavor_fog/size_config.dart';
 import 'package:flavor_fog/temprating.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,25 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
+  setName() async {
+    final shopDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser.uid)
+        .get();
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser.uid)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      setState(() {
+        // print('Document data: ${documentSnapshot.data()}' +
+        //     'a');
+
+        name = shopDoc["name"];
+      });
+    });
+  }
+
   void getUser() {
     final user = FirebaseAuth.instance.currentUser;
     final uid = user.uid;
@@ -34,7 +54,7 @@ class _BodyState extends State<Body> {
   final FirebaseStorage storage = FirebaseStorage.instanceFor(
       app: FirebaseFirestore.instance.app,
       bucket: 'gs://my-project.appspot.com');
-
+  String name;
   String errorMsg;
 
   _BodyState() {
@@ -130,7 +150,11 @@ class _BodyState extends State<Body> {
             color: Color(0xFF212121),
             text: "My Orders",
             icon: "assets/icons/Mail.svg",
-            press: () {},
+            press: () {
+              pushNewScreen(context,
+                  screen: Orders(name: name),
+                  pageTransitionAnimation: PageTransitionAnimation.slideUp);
+            },
           ),
           ProfileMenu(
             color: Color(0xFF212121),
@@ -161,15 +185,13 @@ class _BodyState extends State<Body> {
                   text: "My Shop",
                   icon: "assets/icons/Log out.svg",
                   press: () async {
-                    String uid = FirebaseAuth.instance.currentUser.uid;
                     final shopDoc = await FirebaseFirestore.instance
                         .collection('users')
-                        .doc(uid)
+                        .doc(FirebaseAuth.instance.currentUser.uid)
                         .get();
-
                     FirebaseFirestore.instance
                         .collection('users')
-                        .doc(uid)
+                        .doc(FirebaseAuth.instance.currentUser.uid)
                         .get()
                         .then((DocumentSnapshot documentSnapshot) {
                       if (shopDoc.data().containsValue("hasShop")) {
@@ -177,7 +199,7 @@ class _BodyState extends State<Body> {
                           // print('Document data: ${documentSnapshot.data()}' +
                           //     'a');
                           String shopId = shopDoc["shopId"];
-                          String name = shopDoc["name"];
+                          name = shopDoc["name"];
                           pushNewScreen(context,
                               screen: MyShopScreen(
                                 token: _tokenId,

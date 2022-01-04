@@ -6,6 +6,7 @@ import 'package:flavor_fog/components/rss_reader.dart';
 import 'package:flavor_fog/screens/account/account_screen.dart';
 import 'package:flavor_fog/screens/auth_screen.dart';
 import 'package:flavor_fog/screens/chats/chats_screen.dart';
+import 'package:flavor_fog/screens/checkout.dart';
 import 'package:flavor_fog/screens/extract.dart';
 import 'package:flavor_fog/screens/forums.dart';
 import 'package:flavor_fog/screens/home/components/product_list.dart';
@@ -48,6 +49,7 @@ final Map<String, WidgetBuilder> routes = {
   ForumsScreen.routeName: (context) => ForumsScreen(),
   ProductList.routeName: (context) => ProductList(),
   Requests.routeName: (context) => Requests(),
+  CheckOut.routeName: (context) => CheckOut(),
   ReqDetail.routeName: (context) => ReqDetail(),
   ExtractArgumentsScreen.routeName: (context) => const ExtractArgumentsScreen(),
 };

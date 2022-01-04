@@ -49,7 +49,6 @@ class Body extends StatelessWidget {
                 shopId: shopId,
               )));
 
-      print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
       // print(
       //     'AAAAAAAAAAAAAAAAAAA\n${result.notification.jsonRepresentation().replaceAll("\\n", "\n")}');
       // this.setState(() {

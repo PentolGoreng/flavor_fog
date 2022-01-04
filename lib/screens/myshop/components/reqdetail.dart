@@ -72,38 +72,12 @@ class _ReqDetailState extends State<ReqDetail> {
                 Spacer(),
                 TextButton(
                     onPressed: () async {
-                      FirebaseFirestore.instance
-                          .collection('shops')
-                          .doc(widget.shopId)
-                          .collection('deliv')
-                          .add({'request': 'Accepted/Booked', 'name': _name});
-                      FirebaseFirestore.instance
-                          .collection('shops')
-                          .doc(widget.shopId)
-                          .collection('request')
-                          .doc(widget.doc)
-                          .delete();
-
-                      Navigator.of(context, rootNavigator: true).push(
-                        MaterialPageRoute(
-                          builder: (BuildContext context) {
-                            return Requests(
-                              shopId: widget.shopId,
-                            );
-                          },
-                        ),
-                      );
-                    },
-                    child: Text('Accept')),
-                TextButton(
-                    onPressed: () {
-                      FirebaseFirestore.instance
-                          .collection('shops')
-                          .doc(widget.shopId)
-                          .collection('deliv')
-                          .add({
-                        'request': 'Rejected/Unavailable',
-                        "name": _name
+                      FirebaseFirestore.instance.collection('booked').add({
+                        'request': 'Accepted/Booked',
+                        'name': _name,
+                        "shopId": widget.shopId,
+                        "product": dataDetail[0]['title'],
+                        "number": dataDetail[0]['number']
                       });
                       FirebaseFirestore.instance
                           .collection('shops')
@@ -111,15 +85,43 @@ class _ReqDetailState extends State<ReqDetail> {
                           .collection('request')
                           .doc(widget.doc)
                           .delete();
-                      Navigator.of(context, rootNavigator: true).push(
-                        MaterialPageRoute(
-                          builder: (BuildContext context) {
-                            return Requests(
-                              shopId: widget.shopId,
-                            );
-                          },
-                        ),
-                      );
+                      Navigator.of(context).pop();
+                      // Navigator.of(context, rootNavigator: true).push(
+                      //   MaterialPageRoute(
+                      //     builder: (BuildContext context) {
+                      //       return Requests(
+                      //         shopId: widget.shopId,
+                      //       );
+                      //     },
+                      //   ),
+                      // );
+                    },
+                    child: Text('Accept')),
+                TextButton(
+                    onPressed: () {
+                      FirebaseFirestore.instance.collection('rejected').add({
+                        'request': 'Rejected/Unavailable',
+                        "name": _name,
+                        "shopId": widget.shopId,
+                        "product": dataDetail[0]['title'],
+                        "number": dataDetail[0]['number']
+                      });
+                      FirebaseFirestore.instance
+                          .collection('shops')
+                          .doc(widget.shopId)
+                          .collection('request')
+                          .doc(widget.doc)
+                          .delete();
+                      Navigator.of(context).pop();
+                      // Navigator.of(context, rootNavigator: true).push(
+                      //   MaterialPageRoute(
+                      //     builder: (BuildContext context) {
+                      //       return Requests(
+                      //         shopId: widget.shopId,
+                      //       );
+                      //     },
+                      //   ),
+                      // );
                     },
                     child: Text('Reject/Not Available')),
               ],
