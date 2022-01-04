@@ -23,6 +23,7 @@ class CheckOut extends StatefulWidget {
   final String selected;
   final String shopId;
   final String token;
+  static String routeName = "/checkout";
   @override
   _CheckOutState createState() => _CheckOutState();
 }
@@ -463,52 +464,47 @@ class _CheckOutState extends State<CheckOut> {
                               //     .collection('request')
                               //     .doc(widget.shopId)
                               //     .set({'shop': widget.selected});
-
-                              if (!exist) {
-                                for (var i = 0; i < checkDB.length; i++) {
-                                  DocumentReference docRef =
-                                      await FirebaseFirestore.instance
-                                          .collection('shops')
-                                          .doc(widget.shopId)
-                                          .collection('request')
-                                          .add({
-                                    "request": "waiting",
-                                    "id": checkDB[i]['productId'],
-                                    "title": checkDB[i]['title'],
-                                    "price": checkDB[i]['price'],
-                                    "number": checkDB[i]['total'],
-                                    "shop": widget.selected,
-                                    "token": tokenId,
-                                    "shopId": widget.shopId,
-                                    "uid": _uid,
-                                    "time": Timestamp.now(),
-                                    "name": name,
-                                  });
-                                  FirebaseFirestore.instance
-                                      .collection('shops')
-                                      .doc(widget.shopId)
-                                      .collection('request')
-                                      .doc(docRef.id)
-                                      .update({'doc': docRef.id});
-                                }
-
-                                await send();
-                                for (var i = 0; i < checkDB.length; i++) {
-                                  await FirebaseFirestore.instance
-                                      .collection("users")
-                                      .doc(user.uid)
-                                      .collection("cart")
-                                      .doc(checkDB[i]['productId'])
-                                      .delete();
-                                }
+                              Navigator.of(context).pop(true);
+                              for (var i = 0; i < checkDB.length; i++) {
+                                DocumentReference docRef =
+                                    await FirebaseFirestore.instance
+                                        .collection('shops')
+                                        .doc(widget.shopId)
+                                        .collection('request')
+                                        .add({
+                                  "request": "waiting",
+                                  "id": checkDB[i]['productId'],
+                                  "title": checkDB[i]['title'],
+                                  "price": checkDB[i]['price'],
+                                  "number": checkDB[i]['total'],
+                                  "shop": widget.selected,
+                                  "token": tokenId,
+                                  "shopId": widget.shopId,
+                                  "uid": _uid,
+                                  "time": Timestamp.now(),
+                                  "name": name,
+                                });
+                                await FirebaseFirestore.instance
+                                    .collection('shops')
+                                    .doc(widget.shopId)
+                                    .collection('request')
+                                    .doc(docRef.id)
+                                    .update({'doc': docRef.id});
+                                await FirebaseFirestore.instance
+                                    .collection("users")
+                                    .doc(user.uid)
+                                    .collection("cart")
+                                    .doc(checkDB[i]['productId'])
+                                    .delete();
                               }
+                              await send();
+
                               // await getDataName();
                               // sendNotification(daftar, "Test 1", "test");
 
                               daftar.clear;
 
                               print(daftar);
-                              Navigator.pop(context);
                             },
                             child: Center(
                                 child:
