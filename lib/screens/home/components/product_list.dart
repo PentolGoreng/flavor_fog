@@ -1,5 +1,6 @@
 //@dart=2.9
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flavor_fog/screens/cart/cart_screen.dart';
 import 'package:flavor_fog/screens/home/components/icon_btn_with_counter.dart';
 import 'package:flavor_fog/screens/myshop/components/requests.dart';
@@ -39,11 +40,22 @@ class _ProductListState extends State<ProductList>
   String search = "";
   int currentPage;
   final PageController controller = PageController();
-
+  Map<String, dynamic> _list;
   @override
   bool get wantKeepAlive => true;
   Widget build(BuildContext context) {
     updateKeepAlive();
+    // Widget _list(DocumentSnapshot data) {
+    //   return ProductCard1(
+    //       title: data['title'],
+    //       price: data['price'],
+    //       id: data['id'],
+    //       images: List.from(data['images']),
+    //       description: data['desc'],
+    //       shop: data['shop'],
+    //       shopId: data['shopId']);
+    // }
+
     return Container(
       height: 300,
       child: Column(
@@ -144,17 +156,26 @@ class _ProductListState extends State<ProductList>
                               return Center(child: CircularProgressIndicator());
                             }
                             final productDB = snapshot.data.docs;
-                            final productFilter = snapshot.data.docs.where(
-                                (DocumentSnapshot<Object> element) =>
+                            final productFilter = snapshot.data.docs
+                                .where((DocumentSnapshot<Object> element) =>
                                     element['title']
                                         .toString()
                                         .toLowerCase()
-                                        .contains(search.toLowerCase()));
+                                        .contains(search.toLowerCase()))
+                                .toList();
 
                             return GridView.count(
                               shrinkWrap: true,
                               crossAxisCount: 2,
                               children: [
+                                // snapshot.data.docs
+                                //     .where((DocumentSnapshot<Object> element) =>
+                                //         element['title']
+                                //             .toString()
+                                //             .toLowerCase()
+                                //             .contains(search.toLowerCase()))
+                                //     .map(_list)
+                                //     .toList()
                                 ...List.generate(
                                   search == "" || search == null
                                       ? snapshot.data.docs.length
