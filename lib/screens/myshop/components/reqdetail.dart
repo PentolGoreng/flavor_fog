@@ -99,7 +99,7 @@ class _ReqDetailState extends State<ReqDetail> {
                     child: Text('Accept')),
                 TextButton(
                     onPressed: () {
-                      FirebaseFirestore.instance.collection('rejected').add({
+                      FirebaseFirestore.instance.collection('booked').add({
                         'request': 'Rejected/Unavailable',
                         "name": _name,
                         "shopId": widget.shopId,

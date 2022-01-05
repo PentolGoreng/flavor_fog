@@ -234,6 +234,55 @@ class _CheckOutState extends State<CheckOut> {
                   }
                   final checkDB1 = snapshot.data.docs;
 
+                  submitPost() async {
+                    await _getToken();
+                    // await FirebaseFirestore.instance
+                    //     .collection('request')
+                    //     .doc(widget.shopId)
+                    //     .set({'shop': widget.selected});
+                    send();
+                    Navigator.of(context).pop(true);
+                    for (var i = 0; i < checkDB.length; i++) {
+                      DocumentReference docRef = await FirebaseFirestore
+                          .instance
+                          .collection('shops')
+                          .doc(widget.shopId)
+                          .collection('request')
+                          .add({
+                        "request": "waiting",
+                        "id": checkDB[i]['productId'],
+                        "title": checkDB[i]['title'],
+                        "price": checkDB[i]['price'],
+                        "number": checkDB[i]['total'],
+                        "shop": widget.selected,
+                        "token": tokenId,
+                        "shopId": widget.shopId,
+                        "uid": _uid,
+                        "time": Timestamp.now(),
+                        "name": name,
+                      });
+                      FirebaseFirestore.instance
+                          .collection('shops')
+                          .doc(widget.shopId)
+                          .collection('request')
+                          .doc(docRef.id)
+                          .update({'doc': docRef.id});
+                      FirebaseFirestore.instance
+                          .collection("users")
+                          .doc(user.uid)
+                          .collection("cart")
+                          .doc(checkDB[i]['productId'])
+                          .delete();
+                    }
+
+                    // await getDataName();
+                    // sendNotification(daftar, "Test 1", "test");
+
+                    daftar.clear;
+
+                    print(daftar);
+                  }
+
                   return Container(
                     color: login_bg,
                     padding: const EdgeInsets.symmetric(
@@ -458,53 +507,8 @@ class _CheckOutState extends State<CheckOut> {
                           ),
                         ),
                         TextButton(
-                            onPressed: () async {
-                              await _getToken();
-                              // await FirebaseFirestore.instance
-                              //     .collection('request')
-                              //     .doc(widget.shopId)
-                              //     .set({'shop': widget.selected});
-                              Navigator.of(context).pop(true);
-                              for (var i = 0; i < checkDB.length; i++) {
-                                DocumentReference docRef =
-                                    await FirebaseFirestore.instance
-                                        .collection('shops')
-                                        .doc(widget.shopId)
-                                        .collection('request')
-                                        .add({
-                                  "request": "waiting",
-                                  "id": checkDB[i]['productId'],
-                                  "title": checkDB[i]['title'],
-                                  "price": checkDB[i]['price'],
-                                  "number": checkDB[i]['total'],
-                                  "shop": widget.selected,
-                                  "token": tokenId,
-                                  "shopId": widget.shopId,
-                                  "uid": _uid,
-                                  "time": Timestamp.now(),
-                                  "name": name,
-                                });
-                                await FirebaseFirestore.instance
-                                    .collection('shops')
-                                    .doc(widget.shopId)
-                                    .collection('request')
-                                    .doc(docRef.id)
-                                    .update({'doc': docRef.id});
-                                await FirebaseFirestore.instance
-                                    .collection("users")
-                                    .doc(user.uid)
-                                    .collection("cart")
-                                    .doc(checkDB[i]['productId'])
-                                    .delete();
-                              }
-                              await send();
-
-                              // await getDataName();
-                              // sendNotification(daftar, "Test 1", "test");
-
-                              daftar.clear;
-
-                              print(daftar);
+                            onPressed: () {
+                              submitPost();
                             },
                             child: Center(
                                 child:
