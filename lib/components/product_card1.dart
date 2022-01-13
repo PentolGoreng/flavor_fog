@@ -9,10 +9,11 @@ import 'package:flavor_fog/screens/details/details_screen.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:flavor_fog/routes.dart';
 import '../constants.dart';
+import 'package:intl/intl.dart';
 import '../size_config.dart';
 
 class ProductCard1 extends StatelessWidget {
-  const ProductCard1(
+  ProductCard1(
       {Key key,
       this.width = 140,
       this.aspectRetio = 1.02,
@@ -40,7 +41,7 @@ class ProductCard1 extends StatelessWidget {
   final String price;
   final bool isFavourite, isPopular;
   final String shop, shopId;
-
+  final oCcy = new NumberFormat("#,##0.00", "en_US");
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Object>(
@@ -94,7 +95,7 @@ class ProductCard1 extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "IDR ${price}",
+                          "Rp ${oCcy.format(int.parse(price))}",
                           style: TextStyle(
                             fontSize: getProportionateScreenWidth(12),
                             fontWeight: FontWeight.w500,

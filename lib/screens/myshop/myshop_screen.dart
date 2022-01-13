@@ -16,7 +16,6 @@ class MyShopScreen extends StatelessWidget {
       backgroundColor: Color(0xFF212121),
       body: Body(
         shopId: shopId,
-        token: token,
       ),
     );
   }

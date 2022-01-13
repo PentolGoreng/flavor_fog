@@ -23,9 +23,8 @@ import 'package:path/path.dart' as Path;
 import 'shop_pic.dart';
 
 class Body extends StatefulWidget {
-  Body({this.shopId, this.token});
+  Body({this.shopId});
   final String shopId;
-  final String token;
 
   @override
   State<Body> createState() => _BodyState();
@@ -152,7 +151,6 @@ class _BodyState extends State<Body> {
                 onPressed: () {
                   pushNewScreen(context,
                       screen: AddProduct(
-                        token: widget.token,
                         shop: _shop,
                         shopId: widget.shopId,
                       ));

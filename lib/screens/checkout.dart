@@ -10,11 +10,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-
+import 'package:intl/intl.dart';
 import '../size_config.dart';
 
 class CheckOut extends StatefulWidget {
-  const CheckOut({
+  CheckOut({
     Key key,
     this.selected,
     this.shopId,
@@ -24,6 +24,7 @@ class CheckOut extends StatefulWidget {
   final String shopId;
   final String token;
   static String routeName = "/checkout";
+  final oCcy = new NumberFormat("#,##0.00", "en_US");
   @override
   _CheckOutState createState() => _CheckOutState();
 }
@@ -482,9 +483,10 @@ class _CheckOutState extends State<CheckOut> {
                                     ),
                                     Column(
                                       children: [
-                                        Text("${checkDB[index]['price']}"),
                                         Text(
-                                            "${((checkDB[index]['total']) * int.parse(checkDB[index]['price']))}")
+                                            "${widget.oCcy.format(int.parse(checkDB[index]['price']))}"),
+                                        Text(
+                                            "${widget.oCcy.format((checkDB[index]['total']) * int.parse(checkDB[index]['price']))}")
                                       ],
                                     ),
                                   ],

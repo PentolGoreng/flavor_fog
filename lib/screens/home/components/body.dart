@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flavor_fog/screens/home/components/product_list.dart';
 import 'package:flavor_fog/screens/myshop/components/requests.dart';
+import 'package:flavor_fog/screens/myshop/myshop_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:flavor_fog/globals.dart' as globals;
@@ -15,39 +16,39 @@ import 'special_offers.dart';
 
 class Body extends StatelessWidget {
   String shopId;
+  String name;
   checkshop() async {
     final shopDoc = await FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser.uid)
         .get();
 
-    FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser.uid)
         .get()
         .then((DocumentSnapshot documentSnapshot) {
       if (shopDoc.data().containsValue("hasShop")) {
         shopId = shopDoc['shopId'];
+        name = shopDoc['name'];
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    OneSignal.shared
-        .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+    OneSignal.shared.setNotificationOpenedHandler(
+        (OSNotificationOpenedResult result) async {
       // navigatorKey.currentState.pushNamed(Requests.routeName);
-      checkshop();
+      await checkshop();
       // name = result.notification.additionalData['name'];
 
       print('NOTIFICATION OPENED HANDLER CALLED WITH: ${result}');
       // print('${result.notification.additionalData['name']}');
       // print(shopId);
 
-      globals.appNavigator.currentState.push(MaterialPageRoute(
-          builder: (context) => Requests(
-                shopId: shopId,
-              )));
+      globals.appNavigator.currentState.push(
+          MaterialPageRoute(builder: (context) => Requests(shopId: shopId)));
 
       // print(
       //     'AAAAAAAAAAAAAAAAAAA\n${result.notification.jsonRepresentation().replaceAll("\\n", "\n")}');

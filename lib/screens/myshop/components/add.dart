@@ -245,19 +245,6 @@ class _AddProductState extends State<AddProduct> {
   Future uploadFile() async {
     int i = 1;
 
-    for (var img in _image) {
-      setState(() {
-        val = i / _image.length;
-      });
-      ref = firebase_storage.FirebaseStorage.instance.ref().child(
-          'images/${widget.shop}/${_titleController.text}/${Path.basename(img.path)}');
-      await ref.putFile(img).whenComplete(() async {
-        await ref.getDownloadURL().then((value) {
-          urls.add(value);
-          i++;
-        });
-      });
-    }
     FocusScope.of(context).unfocus();
     if (_titleController.text.trim().isEmpty ||
         _priceController.text.trim().isEmpty) {
@@ -267,7 +254,19 @@ class _AddProductState extends State<AddProduct> {
       // _imageFile2 == null ? null : submitimg2();
       // _imageFile3 == null ? null : submitimg3();
       // _imageFile4 == null ? null : submitimg4();
-
+      for (var img in _image) {
+        setState(() {
+          val = i / _image.length;
+        });
+        ref = firebase_storage.FirebaseStorage.instance.ref().child(
+            'images/${widget.shop}/${_titleController.text}/${Path.basename(img.path)}');
+        await ref.putFile(img).whenComplete(() async {
+          await ref.getDownloadURL().then((value) {
+            urls.add(value);
+            i++;
+          });
+        });
+      }
       docRef = await FirebaseFirestore.instance.collection('products').add({
         'images': urls.isEmpty
             ? FieldValue.arrayUnion(imageNames)

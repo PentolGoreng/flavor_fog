@@ -5,14 +5,14 @@ import 'package:expandable_text/expandable_text.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
+import 'package:intl/intl.dart';
 import 'package:flavor_fog/models/product.dart';
 
 import '../../../constants.dart';
 import '../../../size_config.dart';
 
 class ProductDescription extends StatelessWidget {
-  const ProductDescription({
+  ProductDescription({
     Key key,
     this.product,
     this.pressOnSeeMore,
@@ -39,7 +39,7 @@ class ProductDescription extends StatelessWidget {
   final String shop;
   final String shopId;
   final GestureTapCallback pressOnSeeMore;
-
+  final oCcy = new NumberFormat("#,##0.00", "en_US");
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -56,7 +56,7 @@ class ProductDescription extends StatelessWidget {
                 style: Theme.of(context).textTheme.headline6,
               ),
               Text(
-                price,
+                "RP ${oCcy.format(int.parse(price))}",
                 style: Theme.of(context).textTheme.subtitle1,
               ),
             ],

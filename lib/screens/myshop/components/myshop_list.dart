@@ -59,11 +59,13 @@ class _MyShopListState extends State<MyShopList> {
                         //     images: List.from(productDB[index]['images']),
                         //     description: productDB[index]['desc']);
                         return ProductCard1(
-                            title: productDB[index]['title'],
-                            price: productDB[index]['price'],
-                            id: productDB[index]['id'],
-                            images: List.from(productDB[index]['images']),
-                            description: productDB[index]['desc']);
+                          title: productDB[index]['title'],
+                          price: productDB[index]['price'],
+                          id: productDB[index]['id'],
+                          images: List.from(productDB[index]['images']),
+                          description: productDB[index]['desc'],
+                          shopId: widget.shopId,
+                        );
 
                         return SizedBox
                             .shrink(); // here by default width and height is 0

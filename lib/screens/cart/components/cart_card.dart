@@ -3,12 +3,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flavor_fog/models/cart.dart';
-
+import 'package:intl/intl.dart';
 import '../../../constants.dart';
 import '../../../size_config.dart';
 
 class CartCard extends StatelessWidget {
-  const CartCard({
+  CartCard({
     Key key,
     // required this.cart,
     this.id,
@@ -22,6 +22,7 @@ class CartCard extends StatelessWidget {
   final Color color;
   final String id, title, price;
   final int item;
+  final oCcy = new NumberFormat("#,##0.00", "en_US");
   // final Cart cart;
 
   @override
@@ -54,7 +55,7 @@ class CartCard extends StatelessWidget {
             SizedBox(height: 10),
             Text.rich(
               TextSpan(
-                text: "IDR ${price}",
+                text: "Rp ${oCcy.format(int.parse(price))}",
                 style:
                     TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
                 children: [

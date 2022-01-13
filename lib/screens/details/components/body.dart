@@ -82,6 +82,7 @@ class _BodyState extends State<Body> {
           }
 
           final shopDoc = snapshot.data.docs;
+
           print('${shopDoc[0]["image"]}');
           return ListView(
             children: [
@@ -152,203 +153,215 @@ class _BodyState extends State<Body> {
                                 bottom: getProportionateScreenWidth(40),
                                 top: getProportionateScreenWidth(15),
                               ),
-                              child: DefaultButton(
-                                  color: kPrimaryColor,
-                                  text: "Add To Cart",
-                                  press: () {
-                                    showModalBottomSheet(
-                                      backgroundColor: Color(0xFF212121),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      context: context,
-                                      builder: (context) {
-                                        return StatefulBuilder(
-                                          builder: (BuildContext context,
-                                              StateSetter
-                                                  setState1 /*You can rename this!*/) {
-                                            // setState1(() {
-                                            //   _item = "1";
-                                            // });
-                                            return Container(
-                                              height: 300,
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal:
-                                                      getProportionateScreenWidth(
-                                                          20),
-                                                  vertical:
-                                                      getProportionateScreenHeight(
-                                                          10)),
-                                              child: Column(
-                                                children: [
-                                                  Row(
+                              child: widget.shop == null || widget.shop == ""
+                                  ? Container(
+                                      height: 1,
+                                    )
+                                  : DefaultButton(
+                                      color: kPrimaryColor,
+                                      text: "Add To Cart",
+                                      press: () {
+                                        showModalBottomSheet(
+                                          backgroundColor: Color(0xFF212121),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                          ),
+                                          context: context,
+                                          builder: (context) {
+                                            return StatefulBuilder(
+                                              builder: (BuildContext context,
+                                                  StateSetter
+                                                      setState1 /*You can rename this!*/) {
+                                                // setState1(() {
+                                                //   _item = "1";
+                                                // });
+                                                return Container(
+                                                  height: 300,
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal:
+                                                          getProportionateScreenWidth(
+                                                              20),
+                                                      vertical:
+                                                          getProportionateScreenHeight(
+                                                              10)),
+                                                  child: Column(
                                                     children: [
-                                                      // ...List.generate(
-                                                      //   product.colors.length,
-                                                      //   (index) => ColorDot(
-                                                      //     color: product.colors[index],
-                                                      //     isSelected: index == selectedColor,
-                                                      //   ),
-                                                      // ),
-                                                      Spacer(),
-                                                      RoundedIconBtn(
-                                                        icon: Icons.remove,
-                                                        showShadow: true,
-                                                        press: () {
-                                                          _item1 == 1
-                                                              ? null
-                                                              : setState1(() {
-                                                                  _item1--;
+                                                      Row(
+                                                        children: [
+                                                          // ...List.generate(
+                                                          //   product.colors.length,
+                                                          //   (index) => ColorDot(
+                                                          //     color: product.colors[index],
+                                                          //     isSelected: index == selectedColor,
+                                                          //   ),
+                                                          // ),
+                                                          Spacer(),
+                                                          RoundedIconBtn(
+                                                            icon: Icons.remove,
+                                                            showShadow: true,
+                                                            press: () {
+                                                              _item1 == 1
+                                                                  ? null
+                                                                  : setState1(
+                                                                      () {
+                                                                      _item1--;
+                                                                      _item = _item1
+                                                                          .toString();
+                                                                    });
+                                                            },
+                                                          ),
+                                                          SizedBox(
+                                                              width:
+                                                                  getProportionateScreenWidth(
+                                                                      10)),
+                                                          Text(_item),
+                                                          SizedBox(
+                                                              width:
+                                                                  getProportionateScreenWidth(
+                                                                      10)),
+                                                          RoundedIconBtn(
+                                                              icon: Icons.add,
+                                                              showShadow: true,
+                                                              press: () {
+                                                                setState1(() {
+                                                                  _item1++;
                                                                   _item = _item1
                                                                       .toString();
                                                                 });
-                                                        },
+                                                              }),
+                                                        ],
                                                       ),
+                                                      Spacer(),
+                                                      DefaultButton(
+                                                          color: _item1 == 0
+                                                              ? Colors.black
+                                                              : kPrimaryColor,
+                                                          text: _item1 == 0
+                                                              ? "Remove"
+                                                              : "Add To Cart",
+                                                          press: () async {
+                                                            final user =
+                                                                FirebaseAuth
+                                                                    .instance
+                                                                    .currentUser;
+                                                            final snapShot =
+                                                                await FirebaseFirestore
+                                                                    .instance
+                                                                    .collection(
+                                                                        'users')
+                                                                    .doc(user!
+                                                                        .uid)
+                                                                    .collection(
+                                                                        'cart')
+                                                                    .doc(widget
+                                                                        .id) // varuId in your case
+                                                                    .get();
+
+                                                            if (snapShot ==
+                                                                    null ||
+                                                                !snapShot
+                                                                    .exists) {
+                                                              // Document with id == varuId doesn't exist.
+
+                                                              FirebaseFirestore
+                                                                  .instance
+                                                                  .collection(
+                                                                      'users')
+                                                                  .doc(user.uid)
+                                                                  .collection(
+                                                                      'cart')
+                                                                  .doc(
+                                                                      widget.id)
+                                                                  .set({
+                                                                'productId':
+                                                                    widget.id,
+                                                                'shop':
+                                                                    widget.shop,
+                                                                'shopId': widget
+                                                                    .shopId,
+                                                                'total': _item1,
+                                                                'title': widget
+                                                                    .title,
+                                                                'price': widget
+                                                                    .price,
+                                                                // 'shopToken': _token,
+                                                                'image': widget
+                                                                    .images[0]
+                                                                    .toString()
+                                                              });
+                                                              Navigator.pop(
+                                                                  context);
+                                                            } else {
+                                                              int itemCount =
+                                                                  snapShot[
+                                                                      'total'];
+                                                              FirebaseFirestore
+                                                                  .instance
+                                                                  .collection(
+                                                                      'users')
+                                                                  .doc(user.uid)
+                                                                  .collection(
+                                                                      'cart')
+                                                                  .doc(
+                                                                      widget.id)
+                                                                  .update({
+                                                                'total': _item1 +
+                                                                    itemCount,
+                                                              });
+                                                              Navigator.pop(
+                                                                  context);
+                                                            }
+                                                          }
+
+                                                          // Navigator.pop(context);
+
+                                                          // ? FirebaseFirestore
+                                                          //     .instance
+                                                          //     .collection('users')
+                                                          //     .doc(user!.uid)
+                                                          //     .update({
+                                                          //     'cart': FieldValue
+                                                          //         .arrayUnion([id]),
+                                                          //   })
+                                                          // : FirebaseFirestore
+                                                          //     .instance
+                                                          //     .collection('users')
+                                                          //     .doc(user!.uid)
+                                                          //     .update({
+                                                          //     'cart': FieldValue
+                                                          //         .arrayRemove(
+                                                          //             [id]),
+                                                          //   });
+                                                          ),
+                                                      // ElevatedButton(
+                                                      //   onPressed: () {
+                                                      //     pushNewScreen(context,
+                                                      //         screen: tempRating(
+                                                      //             id: widget.id),
+                                                      //         pageTransitionAnimation:
+                                                      //             PageTransitionAnimation
+                                                      //                 .slideUp);
+                                                      //   },
+                                                      //   child: Text('rating'),
+                                                      // ),
                                                       SizedBox(
-                                                          width:
-                                                              getProportionateScreenWidth(
-                                                                  10)),
-                                                      Text(_item),
-                                                      SizedBox(
-                                                          width:
-                                                              getProportionateScreenWidth(
-                                                                  10)),
-                                                      RoundedIconBtn(
-                                                          icon: Icons.add,
-                                                          showShadow: true,
-                                                          press: () {
-                                                            setState1(() {
-                                                              _item1++;
-                                                              _item = _item1
-                                                                  .toString();
-                                                            });
-                                                          }),
+                                                        height:
+                                                            kBottomNavigationBarHeight *
+                                                                2,
+                                                      )
                                                     ],
                                                   ),
-                                                  Spacer(),
-                                                  DefaultButton(
-                                                      color: _item1 == 0
-                                                          ? Colors.black
-                                                          : kPrimaryColor,
-                                                      text: _item1 == 0
-                                                          ? "Remove"
-                                                          : "Add To Cart",
-                                                      press: () async {
-                                                        final user =
-                                                            FirebaseAuth
-                                                                .instance
-                                                                .currentUser;
-                                                        final snapShot =
-                                                            await FirebaseFirestore
-                                                                .instance
-                                                                .collection(
-                                                                    'users')
-                                                                .doc(user!.uid)
-                                                                .collection(
-                                                                    'cart')
-                                                                .doc(widget
-                                                                    .id) // varuId in your case
-                                                                .get();
-
-                                                        if (snapShot == null ||
-                                                            !snapShot.exists) {
-                                                          // Document with id == varuId doesn't exist.
-
-                                                          FirebaseFirestore
-                                                              .instance
-                                                              .collection(
-                                                                  'users')
-                                                              .doc(user.uid)
-                                                              .collection(
-                                                                  'cart')
-                                                              .doc(widget.id)
-                                                              .set({
-                                                            'productId':
-                                                                widget.id,
-                                                            'shop': widget.shop,
-                                                            'shopId':
-                                                                widget.shopId,
-                                                            'total': _item1,
-                                                            'title':
-                                                                widget.title,
-                                                            'price':
-                                                                widget.price,
-                                                            // 'shopToken': _token,
-                                                            'image': widget
-                                                                .images[0]
-                                                                .toString()
-                                                          });
-                                                          Navigator.pop(
-                                                              context);
-                                                        } else {
-                                                          int itemCount =
-                                                              snapShot['total'];
-                                                          FirebaseFirestore
-                                                              .instance
-                                                              .collection(
-                                                                  'users')
-                                                              .doc(user.uid)
-                                                              .collection(
-                                                                  'cart')
-                                                              .doc(widget.id)
-                                                              .update({
-                                                            'total': _item1 +
-                                                                itemCount,
-                                                          });
-                                                          Navigator.pop(
-                                                              context);
-                                                        }
-                                                      }
-
-                                                      // Navigator.pop(context);
-
-                                                      // ? FirebaseFirestore
-                                                      //     .instance
-                                                      //     .collection('users')
-                                                      //     .doc(user!.uid)
-                                                      //     .update({
-                                                      //     'cart': FieldValue
-                                                      //         .arrayUnion([id]),
-                                                      //   })
-                                                      // : FirebaseFirestore
-                                                      //     .instance
-                                                      //     .collection('users')
-                                                      //     .doc(user!.uid)
-                                                      //     .update({
-                                                      //     'cart': FieldValue
-                                                      //         .arrayRemove(
-                                                      //             [id]),
-                                                      //   });
-                                                      ),
-                                                  // ElevatedButton(
-                                                  //   onPressed: () {
-                                                  //     pushNewScreen(context,
-                                                  //         screen: tempRating(
-                                                  //             id: widget.id),
-                                                  //         pageTransitionAnimation:
-                                                  //             PageTransitionAnimation
-                                                  //                 .slideUp);
-                                                  //   },
-                                                  //   child: Text('rating'),
-                                                  // ),
-                                                  SizedBox(
-                                                    height:
-                                                        kBottomNavigationBarHeight *
-                                                            2,
-                                                  )
-                                                ],
-                                              ),
+                                                );
+                                              },
                                             );
+                                            // pushNewScreen(context,
+                                            //     screen: tempRating(id: id),
+                                            //     pageTransitionAnimation:
+                                            //         PageTransitionAnimation.slideUp)
                                           },
                                         );
-                                        // pushNewScreen(context,
-                                        //     screen: tempRating(id: id),
-                                        //     pageTransitionAnimation:
-                                        //         PageTransitionAnimation.slideUp)
-                                      },
-                                    );
-                                  }),
+                                      }),
                             ),
                           )
                         ],

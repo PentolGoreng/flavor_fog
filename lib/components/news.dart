@@ -51,7 +51,7 @@ class _NewsState extends State<News> {
       await launch(
         url,
         forceSafariVC: false,
-        forceWebView: true,
+        forceWebView: false,
       );
       return;
     }
