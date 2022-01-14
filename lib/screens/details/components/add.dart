@@ -56,6 +56,7 @@ class _AddProductState extends State<EditProduct> {
   double val = 0;
   CollectionReference imgRef;
   firebase_storage.Reference ref;
+  bool still = false;
 
   final picker = ImagePicker();
   final _picker = ImagePicker();
@@ -321,7 +322,13 @@ class _AddProductState extends State<EditProduct> {
                   // TextField(),
                   ElevatedButton(
                     onPressed: () async {
-                      uploadFile();
+                      if (still == false) {
+                        setState(() {
+                          still = true;
+                        });
+                        uploadFile();
+                      }
+
                       // FocusScope.of(context).unfocus();
                       // if (_titleController.text.trim().isEmpty ||
                       //     _priceController.text.trim().isEmpty) {
