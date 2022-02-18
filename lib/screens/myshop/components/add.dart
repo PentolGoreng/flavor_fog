@@ -45,7 +45,7 @@ class _AddProductState extends State<AddProduct> {
   TextEditingController _priceController = TextEditingController();
   List<File> imageList = [];
   List<String> imageNames = [
-    "https://firebasestorage.googleapis.com/v0/b/flavour-fog.appspot.com/o/images%2Fno-image-icon-23492.png?alt=media&token=625bbeb7-3269-4e87-85ee-a2f2654c0f03"
+    "https://firebasestorage.googleapis.com/v0/b/flavour-fog.appspot.com/o/Profile%2Fno-image-icon-23492.png?alt=media&token=4aaab574-c0f9-4396-9b4a-0ea502731212"
   ];
   List<String> urls = [];
 

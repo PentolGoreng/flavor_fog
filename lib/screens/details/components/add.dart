@@ -120,8 +120,7 @@ class _AddProductState extends State<EditProduct> {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("AlertDialog"),
-      content: Text(
-          "Would you like to continue learning how to use Flutter alerts?"),
+      content: Text("Do you want to delete this product?"),
       actions: [
         cancelButton,
         continueButton,
@@ -184,17 +183,17 @@ class _AddProductState extends State<EditProduct> {
               padding: EdgeInsets.all(4),
               child: Column(
                 children: [
-                  Center(
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.delete,
-                        color: Colors.red,
-                      ),
-                      onPressed: () async {
-                        showAlertDialog(context);
-                      },
-                    ),
-                  ),
+                  // Center(
+                  //   child: IconButton(
+                  //     icon: Icon(
+                  //       Icons.delete,
+                  //       color: Colors.red,
+                  //     ),
+                  //     onPressed: () async {
+                  //       showAlertDialog(context);
+                  //     },
+                  //   ),
+                  // ),
                   Expanded(
                     child: GridView.builder(
                         itemCount: image1.length == 0
@@ -305,6 +304,7 @@ class _AddProductState extends State<EditProduct> {
                       // });
                     },
                   ),
+
                   Container(
                     constraints: BoxConstraints(maxHeight: 200),
                     child: TextField(
@@ -319,6 +319,15 @@ class _AddProductState extends State<EditProduct> {
                       },
                     ),
                   ),
+                  IconButton(
+                      onPressed: () async {
+                        showAlertDialog(context);
+                      },
+                      icon: Icon(
+                        Icons.delete,
+                        color: Colors.red,
+                      )),
+
                   // TextField(),
                   ElevatedButton(
                     onPressed: () async {

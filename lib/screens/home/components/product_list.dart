@@ -58,7 +58,7 @@ class _ProductListState extends State<ProductList>
     // }
 
     return Container(
-      height: 300,
+      // height: ,
       child: Column(
         children: [
           Padding(
@@ -127,7 +127,7 @@ class _ProductListState extends State<ProductList>
               initialIndex: 0,
               length: 2,
               child: Container(
-                height: 500,
+                height: 650,
                 child: Scaffold(
                   appBar: PreferredSize(
                     preferredSize: Size.fromHeight(40),

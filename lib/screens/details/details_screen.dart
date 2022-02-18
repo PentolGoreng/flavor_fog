@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flavor_fog/constants.dart';
 import 'package:flavor_fog/screens/details/components/add.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
@@ -172,17 +173,24 @@ class _DetailsScreenState extends State<DetailsScreen> {
     //         ratings.add(map2['rating']);
     //       });
     //       double rating1 = (ratings.sum) / snapshot.data.docs.length;
-    return Scaffold(
-      backgroundColor: Color(0xFF212121),
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(AppBar().preferredSize.height),
-        child: shopOwner == "YES"
-            ? IconButton(
-                icon: Icon(
+
+    if (shopOwner == "LOADING") {
+      return Center(child: CircularProgressIndicator());
+    } else {
+      return Scaffold(
+        backgroundColor: Color(0xFF212121),
+        floatingActionButton: shopOwner == "YES"
+            ? FloatingActionButton(
+                backgroundColor: kPrimaryColor,
+                child: Icon(
                   Icons.edit,
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
                 onPressed: () async {
+                  setState(() {
+                    shopOwner = 'LOADING';
+                  });
+
                   await inputimage();
                   await pushNewScreen(context,
                       screen: EditProduct(
@@ -196,26 +204,58 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         description: widget.description,
                       ));
                   image.clear();
+                  setState(() {
+                    shopOwner = 'YES';
+                  });
                 },
               )
-            : Container(
-                height: 40,
-              ),
-      ),
-      // appBar: PreferredSize(
-      //   preferredSize: Size.fromHeight(AppBar().preferredSize.height),
-      //   child: CustomAppBar(rating: rating1),
-      // ),
-      body: Body(
-        title: widget.title,
-        price: widget.price,
-        description: widget.description,
-        images: widget.images,
-        id: widget.id,
-        shop: widget.shop,
-        shopId: widget.shopId,
-      ),
-    );
+            : null,
+        bottomSheet: SizedBox(
+          height: kBottomNavigationBarHeight * 2,
+        ),
+        // appBar: PreferredSize(
+        //   preferredSize: Size.fromHeight(AppBar().preferredSize.height),
+        //   child: shopOwner == "YES"
+        //       ? IconButton(
+        //           icon: Icon(
+        //             Icons.edit,
+        //             color: Colors.white,
+        //           ),
+        //           onPressed: () async {
+        //             await inputimage();
+        //             await pushNewScreen(context,
+        //                 screen: EditProduct(
+        //                   shop: widget.shop,
+        //                   shopId: widget.shopId,
+        //                   id: widget.id,
+        //                   images: widget.images,
+        //                   image: image,
+        //                   title: widget.title,
+        //                   price: widget.price,
+        //                   description: widget.description,
+        //                 ));
+        //             image.clear();
+        //           },
+        //         )
+        //       : Container(
+        //           height: 40,
+        //         ),
+        // ),
+        // appBar: PreferredSize(
+        //   preferredSize: Size.fromHeight(AppBar().preferredSize.height),
+        //   child: CustomAppBar(rating: rating1),
+        // ),
+        body: Body(
+          title: widget.title,
+          price: widget.price,
+          description: widget.description,
+          images: widget.images,
+          id: widget.id,
+          shop: widget.shop,
+          shopId: widget.shopId,
+        ),
+      );
+    }
   }
   // );
 }
