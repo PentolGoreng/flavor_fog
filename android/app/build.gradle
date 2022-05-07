@@ -47,7 +47,7 @@ def keystorePropertiesFile = rootProject.file('key.properties')
    }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -66,9 +66,9 @@ android {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.trigee.flavor_fog"
         minSdkVersion 21
-        targetSdkVersion 30
-        versionCode="5"
-        versionName="1.4"
+        targetSdkVersion 31
+        versionCode="7"
+        versionName="1.6"
         // versionCode flutterVersionCode.toInteger()
         // versionName flutterVersionName
     }

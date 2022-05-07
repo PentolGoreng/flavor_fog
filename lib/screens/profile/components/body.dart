@@ -12,14 +12,17 @@ import 'package:flavor_fog/screens/profile/components/help.dart';
 import 'package:flavor_fog/screens/profile/components/orders.dart';
 import 'package:flavor_fog/size_config.dart';
 import 'package:flavor_fog/temprating.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flavor_fog/screens/auth_screen.dart';
+import 'package:flutter/services.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'profile_menu.dart';
 import 'profile_pic.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class Body extends StatefulWidget {
   @override
@@ -97,6 +100,16 @@ class _BodyState extends State<Body> {
     });
   }
 
+  TextEditingController _idController;
+  TextEditingController _seekToController;
+
+  PlayerState _playerState;
+  YoutubeMetaData _videoMetaData;
+  double _volume = 100;
+  bool _muted = false;
+  bool _isPlayerReady = false;
+
+  YoutubePlayerController _controllerPlayer;
   TextEditingController shopController = TextEditingController();
   TextEditingController addrController = TextEditingController();
   String _tokenId;
@@ -108,9 +121,40 @@ class _BodyState extends State<Body> {
     });
   }
 
+  YoutubePlayerController _controller = YoutubePlayerController(
+    initialVideoId: '1AlOyHo-E7M',
+    flags: YoutubePlayerFlags(
+        autoPlay: true, mute: false, forceHD: false, startAt: 00),
+  );
+  void listener() {
+    if (_isPlayerReady) {
+      setState(() {
+        _playerState = _controller.value.playerState;
+        _videoMetaData = _controller.metadata;
+      });
+    }
+  }
+
   @override
+  void initState() {
+    super.initState();
+    // _controller = YoutubePlayerController(
+    //   initialVideoId: "1AlOyHo-E7M",
+    //   flags: const YoutubePlayerFlags(
+    //     mute: false,
+    //     autoPlay: true,
+    //     disableDragSeek: false,
+    //     loop: false,
+    //     isLive: false,
+    //     forceHD: false,
+    //     enableCaption: true,
+    //   ),
+    // )..addListener(listener);
+  }
+
   Widget build(BuildContext context) {
     _getData();
+
     return SingleChildScrollView(
         padding: EdgeInsets.symmetric(vertical: 20),
         child: Column(children: [
@@ -156,6 +200,19 @@ class _BodyState extends State<Body> {
                   pageTransitionAnimation: PageTransitionAnimation.slideUp);
             },
           ),
+
+          ProfileMenu(
+              color: Color(0xFF212121),
+              text: "Tutorial",
+              icon: "assets/icons/Question mark.svg",
+              press: () {
+                _showDialog1(context);
+                _controller.reset();
+                // _controller.reload();
+                // setState(() {
+                //   _isPlayerReady = true;
+                // });
+              }),
           ProfileMenu(
             color: Color(0xFF212121),
             text: "Log Out",
@@ -229,6 +286,30 @@ class _BodyState extends State<Body> {
             height: kBottomNavigationBarHeight,
           ),
         ]));
+  }
+
+  void _showDialog1(context) {
+    showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+        ),
+        context: context,
+        builder: (context) => Container(
+              color: login_bg,
+              padding: EdgeInsets.only(bottom: kBottomNavigationBarHeight),
+              child: YoutubePlayer(
+                controller: _controller,
+                showVideoProgressIndicator: true,
+                progressIndicatorColor: kPrimaryColor,
+                progressColors: ProgressBarColors(
+                  playedColor: kPrimaryColor,
+                  handleColor: kPrimaryColor,
+                ),
+                onReady: () {
+                  // _controller.addListener(listener);
+                },
+              ),
+            ));
   }
 
   void _showDialog(context) {
